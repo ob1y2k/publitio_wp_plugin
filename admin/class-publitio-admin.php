@@ -100,4 +100,12 @@ class Publitio_Admin {
 
 	}
 
+	public function add_plugin_admin_menu() {
+		add_menu_page( 'Publitio', 'Publitio', 'manage_options', 'publitio-settings', array($this, 'display_plugin_settings_page'), plugins_url('/publitio/admin/images/cloud-icon.png'), 12);
+	}
+
+	public function display_plugin_settings_page() {
+		include_once('partials/publitio-settings-page.php');
+	}
+
 }
