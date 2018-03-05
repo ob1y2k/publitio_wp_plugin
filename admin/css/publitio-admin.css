@@ -2,3 +2,33 @@
  * All of the CSS for your admin-specific functionality should be
  * included in this file.
  */
+
+ @import url('https://fonts.googleapis.com/css?family=Raleway');
+
+.settings-wrapper {
+    padding: 50px 50px;
+    font-family: 'Raleway', sans-serif;
+    font-size: 1.5rem;
+}
+
+.settings-paragraph {
+    font-size: 1.1rem;
+}
+
+a {
+    color: #4D6D90
+}
+
+a:hover {
+    color: #4D6D90;
+}
+
+.emphasize {
+    font-weight: bold;
+    color: #4D6D90;
+}
+
+.settings-title {
+    color: #4D6D90;
+    font-weight: 800;
+}
