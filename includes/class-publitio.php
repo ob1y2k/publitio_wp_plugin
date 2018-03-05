@@ -112,6 +112,21 @@ class Publitio {
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-publitio-i18n.php';
 
 		/**
+		 * Constants
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/constants.php';
+
+		/**
+		 * Publitio API class
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/publitio_api.php';
+
+		/**
+		 * The class responsible for everyhing
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/index.php';
+
+		/**
 		 * The class responsible for defining all actions that occur in the admin area.
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-publitio-admin.php';
@@ -157,6 +172,8 @@ class Publitio {
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
 
+		$this->loader->add_action( 'admin_menu', $plugin_admin, 'add_plugin_admin_menu' );
+		$this->loader->add_action( 'wp_ajax_update_settings_action', $plugin_admin, 'update_settings' );
 	}
 
 	/**

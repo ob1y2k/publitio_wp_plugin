@@ -1,32 +1,35 @@
-(function( $ ) {
-	'use strict';
+(function ($) {
+  'use strict';
 
-	/**
-	 * All of the code for your admin-facing JavaScript source
-	 * should reside in this file.
-	 *
-	 * Note: It has been assumed you will write jQuery code here, so the
-	 * $ function reference has been prepared for usage within the scope
-	 * of this function.
-	 *
-	 * This enables you to define handlers, for when the DOM is ready:
-	 *
-	 * $(function() {
-	 *
-	 * });
-	 *
-	 * When the window is loaded:
-	 *
-	 * $( window ).load(function() {
-	 *
-	 * });
-	 *
-	 * ...and/or other possibilities.
-	 *
-	 * Ideally, it is not considered best practise to attach more than a
-	 * single DOM-ready or window-load handler for a particular page.
-	 * Although scripts in the WordPress core, Plugins and Themes may be
-	 * practising this, we should strive to set a better example in our own work.
-	 */
+  const STATUSES = {
+    ERROR_UNAUTHORIZED: 401,
+    ERROR: 500,
+    SUCCESS: 200
+  }
 
-})( jQuery );
+  $(function () {
+    $('#update-settings-button').bind('click', function (event) {
+      clearFeedbackBlocks()
+      jQuery.post(ajaxurl, {
+        action: 'update_settings_action',
+        api_secret: $('#api-secret').val(),
+        api_key: $('#api-key').val()
+      }, function (response) {
+        console.log(response.status)
+        if (response.status === STATUSES.ERROR_UNAUTHORIZED) {
+          $('#feedback-error-block').text('Wrong credentials.');
+        } else if (response.status === STATUSES.SUCCESS) {
+          $('#feedback-success-block').text('Great!');
+        } else {
+          $('#feedback-error-block').text('Something went wrong.');
+        }
+      });
+    });
+  });
+
+  function clearFeedbackBlocks() {
+    $('#feedback-error-block').empty();
+    $('#feedback-success-block').empty();
+  }
+
+})(jQuery);

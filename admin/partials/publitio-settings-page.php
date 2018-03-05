@@ -34,4 +34,21 @@
     Then get your <span class="emphasize">API KEY</span> and <span class="emphasize">API SECRET</span> from <a target="_blank" href="https://publit.io/dashboard">Publitio Dashboard</a>
     and enter them bellow.
   </p>
+
+  <div class="api-wrapper">
+    <label for="api-key">API key:</label>
+    <input id="api-key" name="api-key" type="password" />
+
+    <label for="api-secret">API secret:</label>
+    <input id="api-secret" name="api-secret" type="password" />
+
+    <div class="feedback-block feedback-error-block" id="feedback-error-block"></div>
+    <div class="feedback-block feedback-success-block" id="feedback-success-block"></div>
+  </div>
+
+  <hr />
+
+  <div class="button-wrapper">
+    <button type="button" class="publitio-button" id="update-settings-button">Update Settings</button>
+  </div>
 </div>

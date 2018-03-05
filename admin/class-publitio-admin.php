@@ -41,6 +41,15 @@ class Publitio_Admin {
 	private $version;
 
 	/**
+	 * Instance of Publitio class
+	 *
+	 * @since    1.0.0
+	 * @access   private
+	 * @var      Publitio    $version    The current version of this plugin.
+	 */
+	 private $publitio;
+
+	/**
 	 * Initialize the class and set its properties.
 	 *
 	 * @since    1.0.0
@@ -51,6 +60,7 @@ class Publitio_Admin {
 
 		$this->plugin_name = $plugin_name;
 		$this->version = $version;
+		$this->publitio = new PublitioService;
 
 	}
 
@@ -96,7 +106,7 @@ class Publitio_Admin {
 		 * class.
 		 */
 
-		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/publitio-admin.js', array( 'jquery' ), $this->version, false );
+		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . '/js/publitio-admin.js', array( 'jquery' ), $this->version, false );
 
 	}
 
@@ -106,6 +116,10 @@ class Publitio_Admin {
 
 	public function display_plugin_settings_page() {
 		include_once('partials/publitio-settings-page.php');
+	}
+
+	public function update_settings() {
+		$this->publitio->init($_POST['api_key'], $_POST['api_secret']);
 	}
 
 }
