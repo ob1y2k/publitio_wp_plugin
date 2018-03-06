@@ -121,6 +121,12 @@ class Publitio {
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/publitio_api.php';
 
+
+		/**
+		 * Auth Service
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-auth-service.php';
+
 		/**
 		 * The class responsible for everyhing
 		 */
@@ -174,6 +180,8 @@ class Publitio {
 
 		$this->loader->add_action( 'admin_menu', $plugin_admin, 'add_plugin_admin_menu' );
 		$this->loader->add_action( 'wp_ajax_update_settings_action', $plugin_admin, 'update_settings' );
+		$this->loader->add_action( 'wp_ajax_get_players_action', $plugin_admin, 'try_to_get_players' );
+		$this->loader->add_action( 'wp_ajax_set_default_player', $plugin_admin, 'set_default_player' );
 	}
 
 	/**

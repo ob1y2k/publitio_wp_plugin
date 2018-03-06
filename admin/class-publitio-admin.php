@@ -122,4 +122,12 @@ class Publitio_Admin {
 		$this->publitio->init($_POST['api_key'], $_POST['api_secret']);
 	}
 
+	public function try_to_get_players() {
+		$this->publitio->on_load();
+	}
+
+	public function set_default_player() {
+		$this->publitio->set_default_player($_POST['default_player_id']);
+	}
+
 }

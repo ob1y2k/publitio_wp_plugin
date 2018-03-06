@@ -5,13 +5,13 @@
 
  @import url('https://fonts.googleapis.com/css?family=Raleway');
 
-.settings-wrapper {
+.page-wrapper {
     padding: 50px 50px;
     font-family: 'Raleway', sans-serif;
     font-size: 1.5rem;
 }
 
-.settings-paragraph {
+.section-paragraph {
     font-size: 1.1rem;
 }
 
@@ -28,12 +28,12 @@ a:hover {
     color: #4D6D90;
 }
 
-.settings-title {
+.section-title {
     color: #4D6D90;
     font-weight: 800;
 }
 
-input[type=password] {
+input, select {
     width: 100%;
     padding: 12px 20px;
     margin: 8px 0;
@@ -41,9 +41,10 @@ input[type=password] {
     border: 1px solid #ccc;
     border-radius: 4px;
     box-sizing: border-box;
+    height: 40px !important;
 }
 
-input[type=password]:focus {
+input:focus {
     border-color: #4D6D90;
 }
 
@@ -67,7 +68,7 @@ label {
     text-shadow: -1px 0 grey, 0 1px grey, 1px 0 grey, 0 -1px grey;
 }
 
-.button-wrapper {
+.button-section-wrapper {
     text-align: center;
 }
 
