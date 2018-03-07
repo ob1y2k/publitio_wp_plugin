@@ -130,4 +130,8 @@ class Publitio_Admin {
 		$this->publitio->set_default_player($_POST['default_player_id']);
 	}
 
+	public function publitio_media_button() {
+		include_once('partials/publitio-media-button.php');
+	}
+
 }

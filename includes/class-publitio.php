@@ -182,6 +182,7 @@ class Publitio {
 		$this->loader->add_action( 'wp_ajax_update_settings_action', $plugin_admin, 'update_settings' );
 		$this->loader->add_action( 'wp_ajax_get_players_action', $plugin_admin, 'try_to_get_players' );
 		$this->loader->add_action( 'wp_ajax_set_default_player', $plugin_admin, 'set_default_player' );
+		$this->loader->add_action( 'media_buttons', $plugin_admin, 'publitio_media_button', 16);
 	}
 
 	/**
