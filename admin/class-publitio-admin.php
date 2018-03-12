@@ -41,6 +41,15 @@ class Publitio_Admin {
 	private $version;
 
 	/**
+	 * Instance of Publitio class
+	 *
+	 * @since    1.0.0
+	 * @access   private
+	 * @var      Publitio    $version    The current version of this plugin.
+	 */
+	 private $publitio;
+
+	/**
 	 * Initialize the class and set its properties.
 	 *
 	 * @since    1.0.0
@@ -51,6 +60,7 @@ class Publitio_Admin {
 
 		$this->plugin_name = $plugin_name;
 		$this->version = $version;
+		$this->publitio = new PublitioService;
 
 	}
 
@@ -73,7 +83,7 @@ class Publitio_Admin {
 		 * class.
 		 */
 
-		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/publitio-admin.css', array(), $this->version, 'all' );
+		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . '/css/publitio-admin.css', array(), $this->version, 'all' );
 
 	}
 
@@ -96,8 +106,52 @@ class Publitio_Admin {
 		 * class.
 		 */
 
-		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/publitio-admin.js', array( 'jquery' ), $this->version, false );
+		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . '/js/publitio-admin.js', array( 'jquery' ), $this->version, false );
 
 	}
 
+	public function add_plugin_admin_menu() {
+		add_menu_page( 'Publitio', 'Publitio', 'manage_options', 'publitio-settings', array($this, 'display_plugin_settings_page'), plugins_url('/publitio/admin/images/cloud-icon.png'), 12);
+	}
+
+	public function display_plugin_settings_page() {
+		include_once('partials/publitio-settings-page.php');
+	}
+
+	public function update_settings() {
+		$this->publitio->init($_POST['api_key'], $_POST['api_secret']);
+	}
+
+	public function try_to_get_players() {
+		$this->publitio->on_load();
+	}
+
+	public function set_default_player() {
+		$this->publitio->set_default_player($_POST['default_player_id']);
+	}
+
+	public function publitio_media_button() {
+		include_once('partials/publitio-media-button.php');
+	}
+
+	public function publitio_the_content($content) {
+		$publitio_shortocode = 'publitio';
+		$publitio_regex = '#\[' . $publitio_shortocode . '\].*?\[/' . $publitio_shortocode . '\]#';
+
+		$replaced = preg_replace_callback($publitio_regex, function($matches) {
+			$match_url = $matches[0];
+			$url = substr($match_url, 10, -11);
+			$url = $url . '?api_key=' . get_option(KEY_FIELD) . '&api_secret=' . get_option(SECRET_FIELD);
+			return $this->publitio_curl($url);
+		}, $content);
+
+		return $replaced;
+	}
+
+	public function publitio_curl($url) {
+		$ch = curl_init($url);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+		return curl_exec($ch);
+	}
 }
