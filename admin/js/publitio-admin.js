@@ -11,6 +11,21 @@
     tryToGetPlayers()
     handleSettingsButtonClick()
     handleDefaultPlayerChange()
+    window.onmessage = (event) => {
+      if (~event.origin.indexOf('http://localhost:8000')) {
+        let data = event.data.split('|')
+        if (data[0] === 'link') {
+          tinymce.activeEditor.execCommand('mceInsertContent', false, `<a href='${data[1]}'>${data[1]}</a>`);
+        } else if (data[0] === 'source') {
+          tinymce.activeEditor.execCommand('mceInsertContent', false, data[1]);
+        } else if (data[0] === 'player') {
+          let fileId = data[1];
+          let playerId = data[2];
+          tinymce.activeEditor.execCommand('mceInsertContent', false, `[publitio]http://localhost:8000/publitio-wordpress/${fileId}/${playerId}/player_html[/publitio]`);
+        }
+        tb_remove();
+      }
+    }
   });
 
   function clearFeedbackBlocks() {

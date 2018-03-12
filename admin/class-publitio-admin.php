@@ -134,4 +134,24 @@ class Publitio_Admin {
 		include_once('partials/publitio-media-button.php');
 	}
 
+	public function publitio_the_content($content) {
+		$publitio_shortocode = 'publitio';
+		$publitio_regex = '#\[' . $publitio_shortocode . '\].*?\[/' . $publitio_shortocode . '\]#';
+
+		$replaced = preg_replace_callback($publitio_regex, function($matches) {
+			$match_url = $matches[0];
+			$url = substr($match_url, 10, -11);
+			$url = $url . '?api_key=' . get_option(KEY_FIELD) . '&api_secret=' . get_option(SECRET_FIELD);
+			return $this->publitio_curl($url);
+		}, $content);
+
+		return $replaced;
+	}
+
+	public function publitio_curl($url) {
+		$ch = curl_init($url);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+		return curl_exec($ch);
+	}
 }

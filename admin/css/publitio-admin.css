@@ -15,11 +15,11 @@
     font-size: 1.1rem;
 }
 
-a {
+.publitio-a {
     color: #4D6D90
 }
 
-a:hover {
+.publitio-a:hover {
     color: #4D6D90;
 }
 
@@ -33,7 +33,7 @@ a:hover {
     font-weight: 800;
 }
 
-input, select {
+.form-input, .form-select {
     width: 100%;
     padding: 12px 20px;
     margin: 8px 0;
@@ -44,11 +44,11 @@ input, select {
     height: 40px !important;
 }
 
-input:focus {
+.form-input:focus {
     border-color: #4D6D90;
 }
 
-label {
+.form-label {
     font-size: 1.1rem;
     text-transform: uppercase;
     font-weight: bold;
