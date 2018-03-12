@@ -1,4 +1,4 @@
-<a title="Publitio" href="http://localhost:8000/publitio-wordpress?api_key=
+<a title="Publitio" href="https://publit.io/publitio-wordpress?api_key=
   <?php
     echo get_option(KEY_FIELD)
   ?>

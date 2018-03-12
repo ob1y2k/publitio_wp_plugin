@@ -12,7 +12,7 @@
     handleSettingsButtonClick()
     handleDefaultPlayerChange()
     window.onmessage = (event) => {
-      if (~event.origin.indexOf('http://localhost:8000')) {
+      if (~event.origin.indexOf('https://publit.io/')) {
         let data = event.data.split('|')
         if (data[0] === 'link') {
           tinymce.activeEditor.execCommand('mceInsertContent', false, `<a href='${data[1]}'>${data[1]}</a>`);
@@ -21,7 +21,7 @@
         } else if (data[0] === 'player') {
           let fileId = data[1];
           let playerId = data[2];
-          tinymce.activeEditor.execCommand('mceInsertContent', false, `[publitio]http://localhost:8000/publitio-wordpress/${fileId}/${playerId}/player_html[/publitio]`);
+          tinymce.activeEditor.execCommand('mceInsertContent', false, `[publitio]https://publit.io/publitio-wordpress/${fileId}/${playerId}/player_html[/publitio]`);
         }
         tb_remove();
       }
