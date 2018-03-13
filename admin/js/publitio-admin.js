@@ -12,16 +12,26 @@
     handleSettingsButtonClick()
     handleDefaultPlayerChange()
     window.onmessage = (event) => {
-      if (~event.origin.indexOf('https://publit.io/')) {
+      if (~event.origin.indexOf('https://publit.io')) {
         let data = event.data.split('|')
         if (data[0] === 'link') {
-          tinymce.activeEditor.execCommand('mceInsertContent', false, `<a href='${data[1]}'>${data[1]}</a>`);
+          if (tinymce.activeEditor !== null && typeof window.tinyMCE.execInstanceCommand !== 'undefined')  {
+            tinymce.activeEditor.execCommand('mceInsertContent', false, `<a href='${data[1]}'>${data[1]}</a>`)
+          } else {
+            send_to_editor(data[1])
+          }
         } else if (data[0] === 'source') {
-          tinymce.activeEditor.execCommand('mceInsertContent', false, data[1]);
+          if (tinymce.activeEditor !== null && typeof window.tinyMCE.execInstanceCommand !== 'undefined')  {
+            tinymce.activeEditor.execCommand('mceInsertContent', false, data[1]);
+          } else {
+            send_to_editor(data[1])
+          }
         } else if (data[0] === 'player') {
           let fileId = data[1];
           let playerId = data[2];
-          tinymce.activeEditor.execCommand('mceInsertContent', false, `[publitio]https://publit.io/publitio-wordpress/${fileId}/${playerId}/player_html[/publitio]`);
+          if (tinymce.activeEditor !== null && typeof window.tinyMCE.execInstanceCommand !== 'undefined') {
+            tinymce.activeEditor.execCommand('mceInsertContent', false, `[publitio]https://publit.io/publitio-wordpress/${fileId}/${playerId}/player_html[/publitio]`)
+          }
         }
         tb_remove();
       }
