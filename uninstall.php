@@ -29,3 +29,7 @@
 if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
 	exit;
 }
+
+delete_option('publitio_key');
+delete_option('publitio_secret');
+delete_option('publitio_default_player_id');

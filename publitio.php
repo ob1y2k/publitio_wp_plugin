@@ -15,7 +15,7 @@
  * @wordpress-plugin
  * Plugin Name:       Publitio
  * Plugin URI:        https://publit.io/
- * Description:       This is a short description of what the plugin does. It's displayed in the WordPress admin area.
+ * Description:       Simple Image & Video Asset Management in the cloud. 
  * Version:           1.0.0
  * Author:            Publitio
  * Author URI:        https://publit.io
