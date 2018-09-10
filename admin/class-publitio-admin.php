@@ -111,7 +111,7 @@ class Publitio_Admin {
 	}
 
 	public function add_plugin_admin_menu() {
-		add_menu_page( 'Publitio', 'Publitio', 'manage_options', 'publitio-settings', array($this, 'display_plugin_settings_page'), plugins_url('/publitio/admin/images/cloud-icon.png'), 12);
+		add_menu_page( 'Publitio', 'Publitio', 'manage_options', 'publitio-settings', array($this, 'display_plugin_settings_page'), plugin_dir_url( __FILE__ ) . '/images/cloud-icon.png', 12);
 	}
 
 	public function display_plugin_settings_page() {
@@ -141,7 +141,7 @@ class Publitio_Admin {
 		$replaced = preg_replace_callback($publitio_regex, function($matches) {
 			$match_url = $matches[0];
 			$url = substr($match_url, 10, -11);
-			$url = $url . '?api_key=' . get_option(KEY_FIELD) . '&api_secret=' . get_option(SECRET_FIELD);
+			$url = $url . '?api_key=' . get_option(PUBLITIO_KEY_FIELD) . '&api_secret=' . get_option(PUBLITIO_SECRET_FIELD);
 			return $this->publitio_curl($url);
 		}, $content);
 

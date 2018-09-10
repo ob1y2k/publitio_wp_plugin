@@ -16,7 +16,7 @@
 <div class="page-wrapper">
   <div class="section-wrapper">
     <h2 class="section-title">
-      <img src="<?php echo plugins_url('/publitio/admin/images/cloud-icon.png'); ?>" alt="" />
+      <img src="<?php echo plugins_url( '/images/cloud-icon.png', dirname(__FILE__)  ); ?>" alt="" />
       Publitio Settings
     </h2>
     <p class="section-paragraph">
