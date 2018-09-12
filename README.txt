@@ -12,13 +12,15 @@ Simple Image & Video Asset Management in the cloud with Publitio API.
 
 == Description ==
 
-Publitio offers powerfull REST & URL-BASED APIs for Media Asset Management. We believe development must be an enjoyable, creative experience to be truly fulfilling. Publitio attempts to take the pain out of whole MAM process by easing common tasks used by majority of web & mobile publishers, such as media files uploading, hosting, processing, publishing, monetization and management.
+Publitio offers powerfull REST & URL-BASED APIs for [Media Asset Management in the cloud](https://publit.io). We believe development must be an enjoyable, creative experience to be truly fulfilling. Publitio attempts to take the pain out of whole MAM process by easing common tasks used by majority of web & mobile publishers, such as media files uploading, hosting, processing, publishing, monetization and management.
+
+Read tutorial [How to setup Publitio Wordpress Plugin](https://publit.io/community/blog/integrate-wordpress-site-with-publitio)
 
 For more info check out [Publitio](https://publit.io) website
 
 Or check detailed documentation for [Publitio Video & Image API](https://publit.io/docs)
 
-Publitio Wordpress Plugin is Open Source, you can contribute to the development at: https://github.com/ob1y2k/publitio_wp_plugin
+This plugin is open source, you can contribute to the development at [Publitio Wordpress Plugin Source on Github](https://github.com/ob1y2k/publitio_wp_plugin)
 
 == Installation ==
 
@@ -41,7 +43,8 @@ Publitio is Platform-as-a-Service providing simple APIs for image & video manage
 
 1. Publitio Settings page
 2. Publitio Media Library page
-2. Publitio Upload File page
+3. Publitio Upload File page
+4. Publitio Media Player in post
 
 == Changelog ==
 
