@@ -49,10 +49,12 @@
 
   function addPlayersToPage(players, defaultPlayerId = '') {
     clearPlayerOptions()
-    players.forEach((player) => {
-      $('<option value="' + player.id + '">' + assembleOption(player) + '</option>').appendTo($('#default-player'));
-    })
-    setSelectedPlayer(defaultPlayerId);
+    if(players != undefined) {
+	    players.forEach((player) => {
+	      $('<option value="' + player.id + '">' + assembleOption(player) + '</option>').appendTo($('#default-player'));
+	    })
+	    setSelectedPlayer(defaultPlayerId);
+	}
   }
 
   function setSelectedPlayer(id) {
