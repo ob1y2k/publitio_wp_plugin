@@ -40,6 +40,10 @@
       </a>
       and enter them bellow.
     </p>
+
+    <p class="section-paragraph">
+      For additional customization and security (CNAME, Domain Level protection, etc.) visit <a class="publitio-a" target="_blank" href="https://publit.io/dashboard/settings">Publitio Settings</a>  
+    </p>
   </div>
 
   <div class="section-wrapper">
