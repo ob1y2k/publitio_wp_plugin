@@ -12,7 +12,7 @@
     handleSettingsButtonClick()
     handleDefaultPlayerChange()
     window.onmessage = (event) => {
-      if (~event.origin.indexOf('https://publit.io')) {
+      if (~event.origin.indexOf('https://publit.io') || ~event.origin.indexOf('http://localhost')) {
         let data = event.data.split('|')
         if (data[0] === 'link') {
           if (tinymce.activeEditor !== null && typeof window.tinyMCE.execInstanceCommand !== 'undefined')  {
@@ -20,21 +20,58 @@
           } else {
             send_to_editor(data[1])
           }
+        } else if (data[0] === 'link_private') {
+          let fileId = data[1];
+          if (tinymce.activeEditor !== null && typeof window.tinyMCE.execInstanceCommand !== 'undefined')  {
+            tinymce.activeEditor.execCommand('mceInsertContent', false, `[publitio]link|${fileId}[/publitio]`)
+          } else {
+            send_to_editor(`[publitio]link|${fileId}[/publitio]`)
+          }
+        } else if (data[0] === 'download') {
+          let fileId = data[1];
+          if (tinymce.activeEditor !== null && typeof window.tinyMCE.execInstanceCommand !== 'undefined')  {
+            tinymce.activeEditor.execCommand('mceInsertContent', false, `[publitio]download|${fileId}[/publitio]`)
+          } else {
+            send_to_editor(`[publitio]download|${fileId}[/publitio]`)            
+          }
         } else if (data[0] === 'source') {
           if (tinymce.activeEditor !== null && typeof window.tinyMCE.execInstanceCommand !== 'undefined')  {
             tinymce.activeEditor.execCommand('mceInsertContent', false, data[1]);
           } else {
             send_to_editor(data[1])
           }
-        } else if (data[0] === 'player') {
+        } else if (data[0] === 'source_private') {
+          let fileId = data[1];
+          let playerId = data[2];
+          if (tinymce.activeEditor !== null && typeof window.tinyMCE.execInstanceCommand !== 'undefined')  {
+            tinymce.activeEditor.execCommand('mceInsertContent', false, `[publitio]source|${fileId}|${playerId}[/publitio]`);
+          } else {
+            send_to_editor(`[publitio]source|${fileId}|${playerId}[/publitio]`)
+          }
+        } else if (data[0] === 'iframe') {
+          if (tinymce.activeEditor !== null && typeof window.tinyMCE.execInstanceCommand !== 'undefined')  {
+            tinymce.activeEditor.execCommand('mceInsertContent', false, data[1]);
+          } else {
+            send_to_editor(data[1])
+          }
+        } else if (data[0] === 'iframe_private') {
+          let fileId = data[1];
+          let playerId = data[2];
+          if (tinymce.activeEditor !== null && typeof window.tinyMCE.execInstanceCommand !== 'undefined')  {
+            tinymce.activeEditor.execCommand('mceInsertContent', false, `[publitio]iframe|${fileId}|${playerId}[/publitio]`);
+          } else {
+            send_to_editor(`[publitio]iframe|${fileId}|${playerId}[/publitio]`)
+          }
+        }  else if (data[0] === 'player') {
           let fileId = data[1];
           let playerId = data[2];
           if (tinymce.activeEditor !== null && typeof window.tinyMCE.execInstanceCommand !== 'undefined') {
-            tinymce.activeEditor.execCommand('mceInsertContent', false, `[publitio]https://publit.io/publitio-wordpress/${fileId}/${playerId}/player_html[/publitio]`)
+            //tinymce.activeEditor.execCommand('mceInsertContent', false, `[publitio]https://publit.io/publitio-wordpress/${fileId}/${playerId}/player_html[/publitio]`)
+            tinymce.activeEditor.execCommand('mceInsertContent', false, `[publitio]player|${fileId}|${playerId}[/publitio]`)
           } else {
-            send_to_editor(`[publitio]https://publit.io/publitio-wordpress/${fileId}/${playerId}/player_html[/publitio]`)
+            send_to_editor(`[publitio]player|${fileId}|${playerId}[/publitio]`)
           }
-        }
+        }        
         tb_remove();
       }
     }

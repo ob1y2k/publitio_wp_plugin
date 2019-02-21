@@ -139,19 +139,112 @@ class Publitio_Admin {
 		$publitio_regex = '#\[' . $publitio_shortocode . '\].*?\[/' . $publitio_shortocode . '\]#';
 
 		$replaced = preg_replace_callback($publitio_regex, function($matches) {
-			$match_url = $matches[0];
-			$url = substr($match_url, 10, -11);
-			$url = $url . '?api_key=' . get_option(PUBLITIO_KEY_FIELD) . '&api_secret=' . get_option(PUBLITIO_SECRET_FIELD);
-			return $this->publitio_curl($url);
+			
+			$match = $matches[0];
+			$matched = substr($match, 10, -11);
+			if (strpos($matched, 'source') === 0) {
+				#source logic
+				$parts = explode("|", $matched);
+				$id = $parts[1];
+				$player = @$parts[2];
+				$url = 'https://api.publit.io/v1/files/player/'.$id.'?&player='.$player.$this->publitio_api_signature();
+				$response = $this->publitio_curl($url);
+				$response = json_decode($response, true);
+		        $source_html = @$response['source_html'];
+		        if($source_html==null) {
+		            $source_html = @$response['error']['message'];		            
+		        }
+        		return $source_html;				
+
+			} else if (strpos($matched, 'iframe') === 0) {
+				#iframe logic
+				$parts = explode("|", $matched);
+				$id = $parts[1];
+				$player = @$parts[2];
+				$url = 'https://api.publit.io/v1/files/player/'.$id.'?&player='.$player.$this->publitio_api_signature();
+				#die($url);
+				$response = $this->publitio_curl($url);
+				$response = json_decode($response, true);
+		        $iframe_html = @$response['iframe_html'];
+		        if($iframe_html==null) {
+		            $iframe_html = @$response['error']['message'];		            
+		        }
+        		return $iframe_html;
+			} else if (strpos($matched, 'player') === 0) {
+				#player logic
+				$parts = explode("|", $matched);
+				$id = $parts[1];
+				$player = @$parts[2];
+				$url = 'https://api.publit.io/v1/files/player/'.$id.'?&player='.$player.$this->publitio_api_signature();
+				$response = $this->publitio_curl($url);
+				$response = json_decode($response, true);
+		        $player_html = @$response['player_html'];
+		        if($player_html==null) {
+		            $player_html = @$response['error']['message'];		            
+		        }
+        		return $player_html;
+			} else if (strpos($matched, 'link') === 0) {
+				#link logic
+				$parts = explode("|", $matched);
+				$id = $parts[1];
+				$player = @$parts[2];
+				$url = 'https://api.publit.io/v1/files/show/'.$id.'?'.$this->publitio_api_signature();
+				#die($url);
+				$response = $this->publitio_curl($url);
+				$response = json_decode($response, true);
+		        $url_preview = @$response['url_preview'];
+		        if($url_preview==null) {
+		            $url_preview = @$response['error']['message'];		            
+		        }
+        		return $url_preview;
+			} else if (strpos($matched, 'download') === 0) {
+				#download logic
+				$parts = explode("|", $matched);
+				$id = $parts[1];
+				$player = @$parts[2];
+				$url = 'https://api.publit.io/v1/files/show/'.$id.'?'.$this->publitio_api_signature();
+				$response = $this->publitio_curl($url);
+				$response = json_decode($response, true);
+		        $url_download = @$response['url_download'];
+		        #die($url_download);
+		        if($url_download==null) {
+		            $url_download = @$response['error']['message'];		            
+		        }
+        		return $url_download;
+			} else {
+				#old logic
+				$url = $matched . '?api_key=' . get_option(PUBLITIO_KEY_FIELD) . '&api_secret=' . get_option(PUBLITIO_SECRET_FIELD);
+				return $this->publitio_curl($url);
+			}			
+
 		}, $content);
 
 		return $replaced;
-	}
-
+	}	
+	/**
+	 * Do curl
+	 *
+	 * @since    1.0.0
+	 */
 	public function publitio_curl($url) {
 		$ch = curl_init($url);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
 		return curl_exec($ch);
+	}
+	/**
+	 * Generate signature
+	 *
+	 * @since    2.0.0
+	 */
+	public function publitio_api_signature() {
+		
+		$api_key= get_option(PUBLITIO_KEY_FIELD);
+		$api_secret= get_option(PUBLITIO_SECRET_FIELD);
+		$api_nonce = mt_rand(10000000, 99999999);
+        $api_timestamp= time();
+        $api_sdk = "wp";        
+        $api_signature = "&api_key=$api_key&api_nonce=$api_nonce&api_timestamp=$api_timestamp&api_signature=".sha1($api_timestamp.$api_nonce.$api_secret)."&api_sdk=$api_sdk";
+		return $api_signature;
 	}
 }

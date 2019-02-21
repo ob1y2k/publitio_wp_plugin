@@ -3,8 +3,8 @@ Contributors: publitio
 Donate link: https://publit.io
 Tags: publitio, images, videos, media, assets, management, upload, storage, hosting, transformation, transcoding, publishing, player, vast, google ima, ad tags, watermarks
 Requires at least: 3.0.1
-Tested up to: 4.7
-Stable tag: 4.3
+Tested up to: 5.0.3
+Stable tag: 4.9
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -51,7 +51,13 @@ Publitio is Platform-as-a-Service providing simple APIs for image & video manage
 = 1.0 =
 * Initial version of Publitio Wordpress plugin.
 
+= 2.0 =
+* Current Version of Publitio Plugin (2.0.0) is compatible with WP 5.0+ however you will need [Classic Editor Plugin](https://wordpress.org/plugins/classic-editor/) for it to work. We're working on adding block support for new Guttenberg Editor and it will be released in next plugin update (pretty soon).
+
 == Upgrade Notice ==
 
 = 1.0 =
 Just install
+
+= 2.0 =
+Current Version of Publitio Plugin (2.0.0) is compatible with WP 5.0+ however you will need [Classic Editor Plugin](https://wordpress.org/plugins/classic-editor/) for it to work. We're working on adding block support for new Guttenberg Editor and it will be released in next plugin update (pretty soon).
