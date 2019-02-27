@@ -1,0 +1,26 @@
+/**
+ * #.# Styles
+ *
+ * CSS for both Frontend+Backend.
+ */
+
+.wp-block-cgb-block-my-block  {
+  background: $red;
+  border: 0.2rem solid $black;
+  color: $black;
+  margin: 0 auto;
+  max-width: 740px;
+  padding: 2rem;
+}
+
+.publitioInput input {
+	/*display:none;*/
+	position:absolute;
+	z-index:99999;
+	left: -5000px;
+}
+
+.publitioIcon {
+  padding: 5px;
+  margin-bottom: 3px;
+}

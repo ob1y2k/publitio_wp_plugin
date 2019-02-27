@@ -65,6 +65,12 @@ register_deactivation_hook( __FILE__, 'deactivate_publitio' );
 require plugin_dir_path( __FILE__ ) . 'includes/class-publitio.php';
 
 /**
+ * Block Initializer.
+ */
+require_once plugin_dir_path( __FILE__ ) . 'block/src/init.php';
+
+
+/**
  * Begins execution of the plugin.
  *
  * Since everything within the plugin is registered via hooks,

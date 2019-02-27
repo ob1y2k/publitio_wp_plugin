@@ -14,6 +14,7 @@
     window.onmessage = (event) => {
       if (~event.origin.indexOf('https://publit.io') || ~event.origin.indexOf('http://localhost')) {
         let data = event.data.split('|')
+        //console.log("onmessage received " + data[0])        
         if (data[0] === 'link') {
           if (tinymce.activeEditor !== null && typeof window.tinyMCE.execInstanceCommand !== 'undefined')  {
             tinymce.activeEditor.execCommand('mceInsertContent', false, `<a href='${data[1]}'>${data[1]}</a>`)
@@ -37,7 +38,7 @@
         } else if (data[0] === 'source') {
           if (tinymce.activeEditor !== null && typeof window.tinyMCE.execInstanceCommand !== 'undefined')  {
             tinymce.activeEditor.execCommand('mceInsertContent', false, data[1]);
-          } else {
+          } else { 
             send_to_editor(data[1])
           }
         } else if (data[0] === 'source_private') {
@@ -48,11 +49,20 @@
           } else {
             send_to_editor(`[publitio]source|${fileId}|${playerId}[/publitio]`)
           }
+        } else if (data[0] === 'source_gutenberg' || data[0] === 'iframe_gutenberg') {
+          
+            //console.log("id je:" + $( ".wp-block.is-selected").prop('id'));
+            //console.log("val je:" +$( '.wp-block.is-selected .container :input[type="text"]').val());
+            window.PublitioSourceHtml = data[1];
+            //$('.wp-block.is-selected .container :input[type="text"]').attr('value', data[1]);
+            $('.wp-block.is-selected .container :input[type="text"]').focus().attr('value', data[1]);           
+          
         } else if (data[0] === 'iframe') {
           if (tinymce.activeEditor !== null && typeof window.tinyMCE.execInstanceCommand !== 'undefined')  {
             tinymce.activeEditor.execCommand('mceInsertContent', false, data[1]);
           } else {
-            send_to_editor(data[1])
+            $("#publitio_block_id").html(data[1]);
+            //send_to_editor(data[1])
           }
         } else if (data[0] === 'iframe_private') {
           let fileId = data[1];
@@ -75,7 +85,7 @@
         tb_remove();
       }
     }
-  });
+  }); 
 
   function clearFeedbackBlocks() {
     $('#feedback-error-block').empty();
@@ -169,3 +179,6 @@
   }
 
 })(jQuery);
+
+
+
