@@ -16,7 +16,7 @@
  * Plugin Name:       Publitio
  * Plugin URI:        https://publit.io/
  * Description:       Simple Image & Video Asset Management in the cloud. 
- * Version:           2.0.0
+ * Version:           2.0.1
  * Author:            Publitio
  * Author URI:        https://publit.io
  * License:           GPL-2.0+
@@ -35,7 +35,7 @@ if ( ! defined( 'WPINC' ) ) {
  * Start at version 1.0.0 and use SemVer - https://semver.org
  * Rename this for your plugin and update it as you release new versions.
  */
-define( 'PUBLITIO_PLUGIN_NAME_VERSION', '2.0.0' );
+define( 'PUBLITIO_PLUGIN_NAME_VERSION', '2.0.1' );
 
 /**
  * The code that runs during plugin activation.
@@ -66,6 +66,8 @@ require plugin_dir_path( __FILE__ ) . 'includes/class-publitio.php';
 
 /**
  * Block Initializer.
+ *
+ * @since    2.0.1
  */
 require_once plugin_dir_path( __FILE__ ) . 'block/src/init.php';
 

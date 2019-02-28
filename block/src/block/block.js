@@ -74,8 +74,8 @@ registerBlockType( 'publitio/block', {
 	    } else {
 	    	return (
 
-	    		<div className="container">
-	    		<div className="button-container">
+	    		<div className="PublitioBlockContainer">
+	    		<div className="PublitioBlockButtonContainer">
 
 	    			<TextControl 
 			          onChange={ updateFieldValue }

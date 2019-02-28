@@ -52,7 +52,11 @@ Publitio is Platform-as-a-Service providing simple APIs for image & video manage
 * Initial version of Publitio Wordpress plugin.
 
 = 2.0 =
-* Current Version of Publitio Plugin (2.0.0) is compatible with WP 5.0+ however you will need [Classic Editor Plugin](https://wordpress.org/plugins/classic-editor/) for it to work. We're working on adding block support for new Guttenberg Editor and it will be released in next plugin update (pretty soon).
+* Publitio Plugin (Version 2.0.0) is compatible with WP 5.0+ however you will need [Classic Editor Plugin](https://wordpress.org/plugins/classic-editor/) for it to work. We're working on adding block support for new Guttenberg Editor and it will be released in next plugin update (pretty soon).
+
+= 2.0.1 =
+* Current Version of Publitio Plugin (2.0.1) has custom block support for Guttenberg editor
+
 
 == Upgrade Notice ==
 
@@ -60,4 +64,7 @@ Publitio is Platform-as-a-Service providing simple APIs for image & video manage
 Just install
 
 = 2.0 =
-Current Version of Publitio Plugin (2.0.0) is compatible with WP 5.0+ however you will need [Classic Editor Plugin](https://wordpress.org/plugins/classic-editor/) for it to work. We're working on adding block support for new Guttenberg Editor and it will be released in next plugin update (pretty soon).
+Publitio Plugin (Version 2.0.0) is compatible with WP 5.0+ however you will need [Classic Editor Plugin](https://wordpress.org/plugins/classic-editor/) for it to work. We're working on adding block support for new Guttenberg Editor and it will be released in next plugin update (pretty soon).
+
+= 2.0.1 =
+* Current Version of Publitio Plugin (2.0.1) has custom block support for Guttenberg editor

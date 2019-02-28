@@ -9,14 +9,6 @@
  *
  * CSS for both Frontend+Backend.
  */
-.wp-block-cgb-block-my-block {
-  background: orangered;
-  border: 0.2rem solid #292929;
-  color: #292929;
-  margin: 0 auto;
-  max-width: 740px;
-  padding: 2rem; }
-
 .publitioInput input {
   /*display:none;*/
   position: absolute;

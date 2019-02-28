@@ -9,12 +9,12 @@
 
 .wp-block { // This may need to be .wp-block in WordPress 5+
     
-  .container {
+  .PublitioBlockContainer {
     border: 1px solid $gray;
     padding: 1rem;
   }
 
-  .button-container {
+  .PublitioBlockButtonContainer {
     text-align: center;
     padding: 22% 0;
     background: $off-white;
@@ -22,24 +22,7 @@
     border-radius: 2px;
     margin: 0 0 1.2rem 0;
   }
-
-  .heading {
-    font-size: 1.5rem;
-    font-weight: 600;
-  }
-
-  .image {
-    height: 15.7rem;
-    width: 100%;
-    object-fit: cover;
-  }
+  
 }
 
-.wp-block-cgb-block-my-block  {
-  background: $green;
-  border: 0.2rem solid $black;
-  color: $black;
-  margin: 0 auto;
-  max-width: 740px;
-  padding: 2rem;
-}
+

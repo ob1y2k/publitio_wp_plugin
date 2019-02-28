@@ -55,7 +55,7 @@
             //console.log("val je:" +$( '.wp-block.is-selected .container :input[type="text"]').val());
             window.PublitioSourceHtml = data[1];
             //$('.wp-block.is-selected .container :input[type="text"]').attr('value', data[1]);
-            $('.wp-block.is-selected .container :input[type="text"]').focus().attr('value', data[1]);           
+            $('.wp-block.is-selected .PublitioBlockContainer :input[type="text"]').focus().attr('value', data[1]);           
           
         } else if (data[0] === 'iframe') {
           if (tinymce.activeEditor !== null && typeof window.tinyMCE.execInstanceCommand !== 'undefined')  {
