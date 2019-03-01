@@ -16,5 +16,6 @@
   left: -5000px; }
 
 .publitioIcon {
-  padding: 5px;
-  margin-bottom: 3px; }
+  padding: 2px;
+  margin-bottom: 3px;
+  position: relative; }

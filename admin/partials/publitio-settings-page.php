@@ -20,9 +20,9 @@
       Publitio Settings
     </h2>
 
-    <p class="section-paragraph" style="background-color: #fff8e5; border: 1px solid #ffb900; padding:10px;">
+    <!--<p class="section-paragraph" style="background-color: #fff8e5; border: 1px solid #ffb900; padding:10px;">
       <strong>WordPress 5.0+ Users</strong>: Current Version of Publitio Plugin (2.0.0) is compatible with WP 5.0+ however you will need <a href="https://wordpress.org/plugins/classic-editor/" target="_blank" >Classic Editor Plugin</a> for it to work. We're working on adding block support for new Guttenberg Editor and it will be released in next plugin update (pretty soon).
-    </p>
+    </p>-->
 
     <p class="section-paragraph">
       <a target="_blank" href="https://publit.io/">Publitio</a> offers advanced APIs for Video & Image
