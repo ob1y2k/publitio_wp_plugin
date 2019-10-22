@@ -49,7 +49,7 @@
           } else {
             send_to_editor(`[publitio]source|${fileId}|${playerId}[/publitio]`)
           }
-        } else if (data[0] === 'source_gutenberg' || data[0] === 'iframe_gutenberg') {
+        } else if (data[0] === 'source_gutenberg') {
           
             //console.log("id je:" + $( ".wp-block.is-selected").prop('id'));
             //console.log("val je:" +$( '.wp-block.is-selected .container :input[type="text"]').val());
@@ -57,12 +57,35 @@
             //$('.wp-block.is-selected .container :input[type="text"]').attr('value', data[1]);
             $('.wp-block.is-selected .PublitioBlockContainer :input[type="text"]').focus().attr('value', data[1]);           
           
+        } else if (data[0] === 'source_gutenberg_private') {
+            
+            console.log("source_gutenberg_private");
+            let fileId = data[2];
+            let playerId = data[3];
+            let pubCode = `[publitio]source|${fileId}|${playerId}[/publitio]`;
+            window.PublitioSourceHtml = pubCode; //data[1];
+            $('.wp-block.is-selected .PublitioBlockContainer :input[type="text"]').focus().attr('value', pubCode);  // data[1]        
+          
+        } else if (data[0] === 'iframe_gutenberg') {
+          
+            window.PublitioSourceHtml = data[1];
+            $('.wp-block.is-selected .PublitioBlockContainer :input[type="text"]').focus().attr('value', data[1]);           
+          
+        } else if (data[0] === 'iframe_gutenberg_private') {
+            
+            //console.log("iframe_gutenberg_private");
+            let fileId = data[2];
+            let playerId = data[3];
+            let pubCode = `[publitio]player|${fileId}|${playerId}[/publitio]`;
+            window.PublitioSourceHtml = pubCode; //data[1];
+            $('.wp-block.is-selected .PublitioBlockContainer :input[type="text"]').focus().attr('value', pubCode);           
+          
         } else if (data[0] === 'iframe') {
           if (tinymce.activeEditor !== null && typeof window.tinyMCE.execInstanceCommand !== 'undefined')  {
             tinymce.activeEditor.execCommand('mceInsertContent', false, data[1]);
           } else {
-            $("#publitio_block_id").html(data[1]);
-            //send_to_editor(data[1])
+            //$("#publitio_block_id").html(data[1]);
+            send_to_editor(data[1])
           }
         } else if (data[0] === 'iframe_private') {
           let fileId = data[1];
