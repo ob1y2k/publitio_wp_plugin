@@ -111,24 +111,24 @@
   }); 
 
   function clearFeedbackBlocks() {
-    $('#feedback-error-block').empty();
-    $('#feedback-success-block').empty();
-    $('#feedback-player-success-block').empty();
-    $('#feedback-player-error-block').empty();
+    $('#publitio-feedback-error-block').empty();
+    $('#publitio-feedback-success-block').empty();
+    $('#publitio-feedback-player-success-block').empty();
+    $('#publitio-feedback-player-error-block').empty();
   }
 
   function addPlayersToPage(players, defaultPlayerId = '') {
     clearPlayerOptions()
     if(players != undefined) {
 	    players.forEach((player) => {
-	      $('<option value="' + player.id + '">' + assembleOption(player) + '</option>').appendTo($('#default-player'));
+	      $('<option value="' + player.id + '">' + assembleOption(player) + '</option>').appendTo($('#publitio-default-player'));
 	    })
 	    setSelectedPlayer(defaultPlayerId);
 	}
   }
 
   function setSelectedPlayer(id) {
-    $('#default-player > option[value="' + id +'"]').attr("selected", "selected");
+    $('#publitio-default-player > option[value="' + id +'"]').attr("selected", "selected");
   }
 
   function assembleOption(player) {
@@ -151,8 +151,8 @@
   }
 
   function clearPlayerOptions() {
-    $('#default-player').empty()
-    $('<option selected hidden disabled>None</option>').appendTo($('#default-player'));
+    $('#publitio-default-player').empty()
+    $('<option selected hidden disabled>None</option>').appendTo($('#publitio-default-player'));
   }
 
   function getAutoplayTextOption(autoPlay) {
@@ -165,24 +165,24 @@
   }
 
   function handleDefaultPlayerChange() {
-    $('#default-player').bind('change', function (event) {
+    $('#publitio-default-player').bind('change', function (event) {
       jQuery.post(ajaxurl, {
         action: 'set_default_player',
         default_player_id: event.target.value
       }, function (response) {
         if (response.status === STATUSES.ERROR_UNAUTHORIZED) {
-          showFeedbackBlock($('#feedback-player-error-block'), 'Wrong credentials');
+          showFeedbackBlock($('#publitio-feedback-player-error-block'), 'Wrong credentials');
         } else if (response.status === STATUSES.SUCCESS) {
-          showFeedbackBlock($('#feedback-player-success-block'), 'Great!');
+          showFeedbackBlock($('#publitio-feedback-player-success-block'), 'Great!');
         } else {
-          showFeedbackBlock($('#feedback-player-error-block'), 'Something went wrong.');
+          showFeedbackBlock($('#publitio-feedback-player-error-block'), 'Something went wrong.');
         }
       });
     });
   }
 
   function handleSettingsButtonClick() {
-    $('#update-settings-button').bind('click', function (event) {
+    $('#publitio-update-settings-button').bind('click', function (event) {
       clearFeedbackBlocks()
       jQuery.post(ajaxurl, {
         action: 'update_settings_action',
@@ -190,12 +190,12 @@
         api_key: $('#api-key').val()
       }, function (response) {
         if (response.status === STATUSES.ERROR_UNAUTHORIZED) {
-          showFeedbackBlock($('#feedback-error-block'), 'Wrong credentials');
+          showFeedbackBlock($('#publitio-feedback-error-block'), 'Wrong credentials');
         } else if (response.status === STATUSES.SUCCESS) {
-          showFeedbackBlock($('#feedback-success-block'), 'Great!');
+          showFeedbackBlock($('#publitio-feedback-success-block'), 'Great!');
           addPlayersToPage(response.players)
         } else {
-          showFeedbackBlock($('#feedback-error-block'), 'Something went wrong.');
+          showFeedbackBlock($('#publitio-feedback-error-block'), 'Something went wrong.');
         }
       });
     });
