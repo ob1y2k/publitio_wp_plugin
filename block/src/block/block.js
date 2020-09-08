@@ -52,13 +52,17 @@ registerBlockType( 'publitio/block', {
 	},
 
 	edit: function( props ) {
+
+		//console.log("edit called")
+
 	    var updateFieldValue = function( val ) {
 	    	//console.log("updateFieldValue " + val)
 	        props.setAttributes( { content: val } );
 	    }
-	    var updateFieldValueSelect = function() {	    	 
-	    	if(window.PublitioSourceHtml!='undefined'&&window.PublitioSourceHtml!=undefined)  {
-	    		//console.log("updateFieldValueSelect " + window.PublitioSourceHtml)	  	
+	    var updateFieldValueSelect = function() {
+	    	//console.log("updateFieldValueSelect called :: " + window.PublitioSourceHtml);	    	 
+	    	if(window.PublitioSourceHtml!='undefined' && window.PublitioSourceHtml!=undefined)  {
+	    		//console.log("updateFieldValueSelect PublitioSourceHtml: " + window.PublitioSourceHtml)	  	
 	        	props.setAttributes( { content: window.PublitioSourceHtml } );
 	        	window.PublitioSourceHtml=undefined;
 	        }
@@ -99,6 +103,9 @@ registerBlockType( 'publitio/block', {
 	},
 
 	save: ( { attributes } ) => {
+
+		//console.log("save called")
+
 	    //return <div>{ attributes.content }</div>;
 	    var createElement = wp.element.createElement;
 		var RawHTML = wp.element.RawHTML;
