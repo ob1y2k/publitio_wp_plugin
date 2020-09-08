@@ -75,6 +75,9 @@ Publitio is Platform-as-a-Service providing simple APIs for image & video manage
 = 2.0.8 =
 * Fixes for gutenberg editor insert source and player functionality
 
+= 2.0.9 =
+* Small updates
+
 
 == Upgrade Notice ==
 
@@ -104,6 +107,9 @@ Publitio Plugin (Version 2.0.0) is compatible with WP 5.0+ however you will need
 
 = 2.0.8 =
 * Fixes for gutenberg editor insert source and player functionality
+
+= 2.0.9 =
+* Small updates
 
 
 
