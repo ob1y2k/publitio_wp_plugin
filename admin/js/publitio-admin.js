@@ -30,13 +30,34 @@
           } else {
             send_to_editor(`[publitio]link|${fileId}[/publitio]`)
           }
+        } else if (data[0] === 'link_gutenberg') {
+          
+            //console.log("link_gutenberg");
+            let fileId = data[1];
+            //let playerId = data[2];
+            let pubCode = `[publitio]link|${fileId}[/publitio]`;
+            window.PublitioSourceHtml = pubCode; //data[1];
+            $('.wp-block.is-selected .PublitioBlockContainer :input[type="text"]').attr('value', pubCode);  // data[1]        
+            $('.wp-block.is-selected .PublitioBlockContainer :input[type="text"]').focus();
+
         } else if (data[0] === 'download') {
+
           let fileId = data[1];
           if (tinymce.activeEditor !== null && typeof window.tinyMCE.execInstanceCommand !== 'undefined')  {
             tinymce.activeEditor.execCommand('mceInsertContent', false, `[publitio]download|${fileId}[/publitio]`)
           } else {
             send_to_editor(`[publitio]download|${fileId}[/publitio]`)            
           }
+
+        } else if (data[0] === 'download_gutenberg') {
+
+            //console.log("download_gutenberg");
+            let fileId = data[1];
+            let pubCode = `[publitio]download|${fileId}[/publitio]`;
+            window.PublitioSourceHtml = pubCode; //data[1];
+            $('.wp-block.is-selected .PublitioBlockContainer :input[type="text"]').attr('value', pubCode);  // data[1]        
+            $('.wp-block.is-selected .PublitioBlockContainer :input[type="text"]').focus();   
+
         } else if (data[0] === 'source') {
           if (tinymce.activeEditor !== null && typeof window.tinyMCE.execInstanceCommand !== 'undefined')  {
             tinymce.activeEditor.execCommand('mceInsertContent', false, data[1]);
@@ -64,7 +85,7 @@
 
         } else if (data[0] === 'source_gutenberg_private') {
             
-            console.log("source_gutenberg_private");
+            //console.log("source_gutenberg_private");
             let fileId = data[2];
             let playerId = data[3];
             let pubCode = `[publitio]source|${fileId}|${playerId}[/publitio]`;
