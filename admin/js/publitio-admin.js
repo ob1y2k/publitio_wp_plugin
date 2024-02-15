@@ -12,7 +12,7 @@
     handleSettingsButtonClick()
     handleDefaultPlayerChange()
     window.onmessage = (event) => {
-      if (~event.origin.indexOf('https://publit.io') || ~event.origin.indexOf('https://dashboard.publit.io') || ~event.origin.indexOf('http://localhost')) {
+      if (~event.origin.indexOf('https://publit.io') || ~event.origin.indexOf('https://dashboard.publit.io') || ~event.origin.indexOf('https://dev-dash.publit.io') || ~event.origin.indexOf('http://localhost')) {
         let data = event.data.split('|')
         
         //console.log("onmessage received " + data[0])    
