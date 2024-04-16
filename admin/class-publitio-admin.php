@@ -221,6 +221,81 @@ class Publitio_Admin {
 
 		return $replaced;
 	}	
+
+	public function publitio_shortcode($atts, $content = null) {
+		if($content) {
+			$parts = explode("|", $content);
+			if($parts[0] == 'source') {
+				#source logic
+				$id = $parts[1];
+				$player = @$parts[2];
+				$url = 'https://api.publit.io/v1/files/player/'.$id.'?&player='.$player.$this->publitio_api_signature();
+				$response = $this->publitio_curl($url);
+				$response = json_decode($response, true);
+		        $source_html = @$response['source_html'];
+		        if($source_html==null) {
+		            $source_html = @$response['error']['message'];
+		        }
+        		return $source_html;
+			} else if($parts[0] == 'iframe') {
+				#iframe logic
+				$id = $parts[1];
+				$player = @$parts[2];
+				$url = 'https://api.publit.io/v1/files/player/'.$id.'?&player='.$player.$this->publitio_api_signature();
+				$response = $this->publitio_curl($url);
+				$response = json_decode($response, true);
+				$iframe_html = @$response['iframe_html'];
+				if($iframe_html==null) {
+					$iframe_html = @$response['error']['message'];
+				}
+				return $iframe_html;
+			} else if($parts[0] == 'player') {
+				#player logic
+				$id = $parts[1];
+				$player = @$parts[2];
+				$url = 'https://api.publit.io/v1/files/player/'.$id.'?&player='.$player.$this->publitio_api_signature();
+				$response = $this->publitio_curl($url);
+				$response = json_decode($response, true);
+				$player_html = @$response['player_html'];
+				if($player_html==null) {
+					$player_html = @$response['error']['message'];
+				}
+				return $player_html;
+			} else if($parts[0] == 'link') {
+				#link logic
+				$id = $parts[1];
+				$player = @$parts[2];
+				$url = 'https://api.publit.io/v1/files/show/'.$id.'?'.$this->publitio_api_signature();
+				#die($url);
+				$response = $this->publitio_curl($url);
+				$response = json_decode($response, true);
+				$url_preview = @$response['url_preview'];
+				if($url_preview==null) {
+					$url_preview = @$response['error']['message'];
+				}
+				return $url_preview;
+			} else if($parts[0] == 'download') {
+				#download logic
+				$id = $parts[1];
+				$player = @$parts[2];
+				$url = 'https://api.publit.io/v1/files/show/'.$id.'?'.$this->publitio_api_signature();
+				$response = $this->publitio_curl($url);
+				$response = json_decode($response, true);
+				$url_download = @$response['url_download'];
+				#die($url_download);
+				if($url_download==null) {
+					$url_download = @$response['error']['message'];
+				}
+				return $url_download;
+			} else {
+				#old logic
+				$url = $content . '?api_key=' . get_option(PUBLITIO_KEY_FIELD) . '&api_secret=' . get_option(PUBLITIO_SECRET_FIELD);
+				return $this->publitio_curl($url);
+			}
+		}
+		return $content;
+	}
+
 	/**
 	 * Do curl
 	 *
