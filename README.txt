@@ -1,7 +1,7 @@
-=== Plugin Name ===
+=== Publitio ===
 Contributors: publitio
 Donate link: https://publit.io
-Tags: publitio, images, videos, media, assets, management, upload, storage, hosting, transformation, transcoding, publishing, player, vast, google ima, ad tags, watermarks
+Tags: publitio, images, videos, embed, upload
 Requires at least: 3.0.1
 Tested up to: 6.8
 Stable tag: 5.0.3
