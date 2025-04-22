@@ -3,7 +3,7 @@ Contributors: publitio
 Donate link: https://publit.io
 Tags: publitio, images, videos, media, assets, management, upload, storage, hosting, transformation, transcoding, publishing, player, vast, google ima, ad tags, watermarks
 Requires at least: 3.0.1
-Tested up to: 6.5
+Tested up to: 6.8
 Stable tag: 5.0.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -105,6 +105,9 @@ Publitio is Platform-as-a-Service providing simple APIs for image & video manage
 = 2.1.8 =
 * WP 6.5 check OK + publitio short codes
 
+= 2.1.9 =
+* WP 6.8 check OK + security fixes
+
 == Upgrade Notice ==
 
 = 1.0 =
@@ -164,3 +167,5 @@ Publitio Plugin (Version 2.0.0) is compatible with WP 5.0+ however you will need
 = 2.1.8 =
 * WP 6.5 check OK + publitio short codes
 
+= 2.1.9 =
+* WP 6.8 check OK + security fixes
