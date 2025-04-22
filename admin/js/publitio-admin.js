@@ -201,7 +201,8 @@
     $('#publitio-default-player').bind('change', function (event) {
       jQuery.post(ajaxurl, {
         action: 'set_default_player',
-        default_player_id: event.target.value
+        default_player_id: event.target.value,
+        wpnonce: $('#_wpnonce').val()
       }, function (response) {
         if (response.status === STATUSES.ERROR_UNAUTHORIZED) {
           showFeedbackBlock($('#publitio-feedback-player-error-block'), 'Wrong credentials');
@@ -220,7 +221,8 @@
       jQuery.post(ajaxurl, {
         action: 'update_settings_action',
         api_secret: $('#api-secret').val(),
-        api_key: $('#api-key').val()
+        api_key: $('#api-key').val(),
+        wpnonce: $('#_wpnonce').val()
       }, function (response) {
         if (response.status === STATUSES.ERROR_UNAUTHORIZED) {
           showFeedbackBlock($('#publitio-feedback-error-block'), 'Wrong credentials');

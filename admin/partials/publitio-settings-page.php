@@ -52,6 +52,7 @@
   </div>
 
   <div class="publitio-section-wrapper">
+    <?php wp_nonce_field('publitio_settings_nonce_action'); ?>
     <label class="publitio-form-label" for="api-key">API key:</label>
     <input class="publitio-form-input" id="api-key" name="api-key" type="password" value="<?php echo get_option('publitio_key', ''); ?>"/>
 

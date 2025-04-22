@@ -119,7 +119,21 @@ class Publitio_Admin {
 	}
 
 	public function update_settings() {
-		$this->publitio->init($_POST['api_key'], $_POST['api_secret']);
+		// Check the nonce
+		if (!isset( $_POST['wpnonce']) || !wp_verify_nonce($_POST['wpnonce'], 'publitio_settings_nonce_action')) {
+			wp_die(__('Unauthorized request.', 'publitio'));
+		}
+
+		// Check user permissions
+		if (!current_user_can('manage_options')) {
+			wp_die(__('You do not have permission to update settings.', 'publitio'));
+		}
+
+		// Sanitize and update settings
+		$api_key = sanitize_text_field($_POST['api_key']);
+		$api_secret = sanitize_text_field($_POST['api_secret']);
+
+		$this->publitio->init($api_key, $api_secret);
 	}
 
 	public function try_to_get_players() {
@@ -127,7 +141,20 @@ class Publitio_Admin {
 	}
 
 	public function set_default_player() {
-		$this->publitio->set_default_player($_POST['default_player_id']);
+		// Check the nonce
+		if (!isset( $_POST['wpnonce']) || !wp_verify_nonce($_POST['wpnonce'], 'publitio_settings_nonce_action')) {
+			wp_die(__('Unauthorized request.', 'publitio'));
+		}
+
+		// Check user permissions
+		if (!current_user_can('manage_options')) {
+			wp_die(__('You do not have permission to update settings.', 'publitio'));
+		}
+
+		// Sanitize and update settings
+		$default_player_id = sanitize_text_field($_POST['default_player_id']);
+
+		$this->publitio->set_default_player($default_player_id);
 	}
 
 	public function publitio_media_button() {
