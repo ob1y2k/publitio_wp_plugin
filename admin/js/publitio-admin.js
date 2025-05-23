@@ -15,7 +15,9 @@
       if (~event.origin.indexOf('https://publit.io') || ~event.origin.indexOf('https://dashboard.publit.io') || ~event.origin.indexOf('https://dev-dash.publit.io') || ~event.origin.indexOf('http://localhost')) {
         let data = event.data.split('|')
         
-        //console.log("onmessage received " + data[0])    
+        //console.log("onmessage received " + data[0])  
+
+        // console.log(data)
 
         if (data[0] === 'link') {
           if (tinymce.activeEditor !== null && typeof window.tinyMCE.execInstanceCommand !== 'undefined')  {
@@ -32,14 +34,84 @@
           }
         } else if (data[0] === 'link_gutenberg') {
           
-            //console.log("link_gutenberg");
-            let fileId = data[1];
-            //let playerId = data[2];
-            let pubCode = `[publitio]link|${fileId}[/publitio]`;
-            window.PublitioSourceHtml = pubCode; //data[1];
-            $('.wp-block.is-selected .PublitioBlockContainer :input[type="text"]').attr('value', pubCode);  // data[1]        
-            $('.wp-block.is-selected .PublitioBlockContainer :input[type="text"]').focus();
+            let pubCode = data[1];
+            window.PublitioSourceHtml = pubCode;
+            
+            const $selectedBlock = $('.wp-block.is-selected');
+            const $input = $('.wp-block.is-selected .PublitioBlockContainer :input[type="text"]');
+            
+            // Set the value and trigger all possible events
+            $input.val(pubCode);
+            $input[0].value = pubCode;
+            
+            // Create and dispatch native events
+            const inputEvent = new Event('input', { bubbles: true, cancelable: true });
+            const changeEvent = new Event('change', { bubbles: true, cancelable: true });
+            $input[0].dispatchEvent(inputEvent);
+            $input[0].dispatchEvent(changeEvent);
+            
+            // Also trigger jQuery events
+            $input.trigger('input').trigger('change');
+            
+            // Force Gutenberg block update
+            if (window.wp && window.wp.data && window.wp.data.dispatch) {
+                const { updateBlockAttributes } = window.wp.data.dispatch('core/block-editor');
+                const blockClientId = $selectedBlock.attr('data-block');
+                if (blockClientId) {
+                    updateBlockAttributes(blockClientId, { content: pubCode });
+                }
+            }
+            
+            $input.focus();
+            // Clear the global variable after use
+            setTimeout(() => {
+                window.PublitioSourceHtml = null;
+            }, 100);
+            // let fileId = data[1];
+            // //let playerId = data[2];
+            // let pubCode = `[publitio]link|${fileId}[/publitio]`;
+            // window.PublitioSourceHtml = pubCode; //data[1];
+            // $('.wp-block.is-selected .PublitioBlockContainer :input[type="text"]').attr('value', pubCode);  // data[1]        
+            // $('.wp-block.is-selected .PublitioBlockContainer :input[type="text"]').focus();
 
+        } else if (data[0] === 'link_gutenberg_private') {
+
+          let fileId = data[1];
+          let folderId = data[2];
+          folderId = folderId !== 'undefined' ? '|'+folderId : '';
+          let pubCode = `[publitio]link|${fileId}${folderId}[/publitio]`;
+          window.PublitioSourceHtml = pubCode;
+          
+          const $selectedBlock = $('.wp-block.is-selected');
+          const $input = $('.wp-block.is-selected .PublitioBlockContainer :input[type="text"]');
+          
+          // Set the value and trigger all possible events
+          $input.val(pubCode);
+          $input[0].value = pubCode;
+          
+          // Create and dispatch native events
+          const inputEvent = new Event('input', { bubbles: true, cancelable: true });
+          const changeEvent = new Event('change', { bubbles: true, cancelable: true });
+          $input[0].dispatchEvent(inputEvent);
+          $input[0].dispatchEvent(changeEvent);
+          
+          // Also trigger jQuery events
+          $input.trigger('input').trigger('change');
+          
+          // Force Gutenberg block update
+          if (window.wp && window.wp.data && window.wp.data.dispatch) {
+              const { updateBlockAttributes } = window.wp.data.dispatch('core/block-editor');
+              const blockClientId = $selectedBlock.attr('data-block');
+              if (blockClientId) {
+                  updateBlockAttributes(blockClientId, { content: pubCode });
+              }
+          }
+          
+          $input.focus();
+          // Clear the global variable after use
+          setTimeout(() => {
+              window.PublitioSourceHtml = null;
+          }, 100);
         } else if (data[0] === 'download') {
 
           let fileId = data[1];
@@ -59,18 +131,21 @@
             $('.wp-block.is-selected .PublitioBlockContainer :input[type="text"]').focus();   
 
         } else if (data[0] === 'source') {
-          if (tinymce.activeEditor !== null && typeof window.tinyMCE.execInstanceCommand !== 'undefined')  {
-            tinymce.activeEditor.execCommand('mceInsertContent', false, data[1]);
+          if (tinymce.activeEditor !== null && typeof window.tinyMCE.execCommand !== 'undefined')  {
+            tinymce.activeEditor.execCommand('InsertHTML', false, data[1] + '\n');
+            // tinymce.activeEditor.execCommand('mceInsertContent', false, data[1]);
           } else { 
             send_to_editor(data[1])
           }
         } else if (data[0] === 'source_private') {
           let fileId = data[1];
           let playerId = data[2];
-          if (tinymce.activeEditor !== null && typeof window.tinyMCE.execInstanceCommand !== 'undefined')  {
-            tinymce.activeEditor.execCommand('mceInsertContent', false, `[publitio]source|${fileId}|${playerId}[/publitio]`);
+          playerId = playerId !== 'undefined' && playerId !== '' ? '|' + playerId : '';
+          if (tinymce.activeEditor !== null && typeof window.tinyMCE.execCommand !== 'undefined')  {
+            tinymce.activeEditor.execCommand('InsertHTML', false, `[publitio]source|${fileId}${playerId}[/publitio]`);
+            // tinymce.activeEditor.execCommand('mceInsertContent', false, `[publitio]source|${fileId}|${playerId}[/publitio]`);
           } else {
-            send_to_editor(`[publitio]source|${fileId}|${playerId}[/publitio]`)
+            send_to_editor(`[publitio]source|${fileId}${playerId}[/publitio]`)
           }
         } else if (data[0] === 'source_gutenberg') {
           
@@ -78,44 +153,158 @@
             //console.log("val je:" +$( '.wp-block.is-selected .PublitioBlockContainer :input[type="text"]').val());
             //console.log("date1 je:" +data[1]);
             window.PublitioSourceHtml = data[1];
-            //$('.wp-block.is-selected .container :input[type="text"]').attr('value', data[1]);
-            $('.wp-block.is-selected .PublitioBlockContainer :input[type="text"]').attr('value', data[1]);           
-            $('.wp-block.is-selected .PublitioBlockContainer :input[type="text"]').focus();
-            //console.log("val after je:" +$( '.wp-block.is-selected .PublitioBlockContainer :input[type="text"]').val());
+            
+            const $selectedBlock = $('.wp-block.is-selected');
+            const $input = $('.wp-block.is-selected .PublitioBlockContainer :input[type="text"]');
+
+            // Set the value and trigger all possible events
+            $input.val(data[1]);
+            $input[0].value = data[1];
+            
+            // Create and dispatch native events
+            const inputEvent = new Event('input', { bubbles: true, cancelable: true });
+            const changeEvent = new Event('change', { bubbles: true, cancelable: true });
+            $input[0].dispatchEvent(inputEvent);
+            $input[0].dispatchEvent(changeEvent);
+            
+            // Also trigger jQuery events
+            $input.trigger('input').trigger('change');
+            
+            // Force Gutenberg block update
+            if (window.wp && window.wp.data && window.wp.data.dispatch) {
+                const { updateBlockAttributes } = window.wp.data.dispatch('core/block-editor');
+                const blockClientId = $selectedBlock.attr('data-block');
+                if (blockClientId) {
+                    updateBlockAttributes(blockClientId, { content: data[1] });
+                }
+            }
+            
+            $input.focus();
+            
+            // Clear the global variable after use
+            setTimeout(() => {
+                window.PublitioSourceHtml = null;
+            }, 100);
 
         } else if (data[0] === 'source_gutenberg_private') {
             
-            //console.log("source_gutenberg_private");
-            let fileId = data[2];
-            let playerId = data[3];
-            let pubCode = `[publitio]source|${fileId}|${playerId}[/publitio]`;
-            window.PublitioSourceHtml = pubCode; //data[1];
-            $('.wp-block.is-selected .PublitioBlockContainer :input[type="text"]').attr('value', pubCode);  // data[1]        
-            $('.wp-block.is-selected .PublitioBlockContainer :input[type="text"]').focus();         
+          let fileId = data[1];
+          let playerId = data[2];
+          playerId = playerId !== 'undefined' ? '|' + playerId : '';
+          let pubCode = `[publitio]source|${fileId}${playerId}[/publitio]`;
+          
+          window.PublitioSourceHtml = pubCode;
+          
+          const $selectedBlock = $('.wp-block.is-selected');
+          const $input = $('.wp-block.is-selected .PublitioBlockContainer :input[type="text"]');
+          
+          // Set the value and trigger all possible events
+          $input.val(pubCode);
+          $input[0].value = pubCode;
+          
+          // Create and dispatch native events
+          const inputEvent = new Event('input', { bubbles: true, cancelable: true });
+          const changeEvent = new Event('change', { bubbles: true, cancelable: true });
+          $input[0].dispatchEvent(inputEvent);
+          $input[0].dispatchEvent(changeEvent);
+          
+          // Also trigger jQuery events
+          $input.trigger('input').trigger('change');
+          
+          // Force Gutenberg block update
+          if (window.wp && window.wp.data && window.wp.data.dispatch) {
+              const { updateBlockAttributes } = window.wp.data.dispatch('core/block-editor');
+              const blockClientId = $selectedBlock.attr('data-block');
+              if (blockClientId) {
+                  updateBlockAttributes(blockClientId, { content: pubCode });
+              }
+          }
+          
+          $input.focus();
+          // Clear the global variable after use
+          setTimeout(() => {
+              window.PublitioSourceHtml = null;
+          }, 100);
           
         } else if (data[0] === 'iframe_gutenberg') {
             
-            //console.log("id je:" + $( ".wp-block.is-selected").prop('id'));
-            //console.log("val je:" +$( '.wp-block.is-selected .PublitioBlockContainer :input[type="text"]').val());
-            //console.log("date1 je:" +data[1]);
             window.PublitioSourceHtml = data[1];
-            $('.wp-block.is-selected .PublitioBlockContainer :input[type="text"]').attr('value', data[1]);           
-            $('.wp-block.is-selected .PublitioBlockContainer :input[type="text"]').focus();         
-            //console.log("val after je:" +$( '.wp-block.is-selected .PublitioBlockContainer :input[type="text"]').val());
+            
+            const $selectedBlock = $('.wp-block.is-selected');
+            const $input = $('.wp-block.is-selected .PublitioBlockContainer :input[type="text"]');
+
+            // Set the value and trigger all possible events
+            $input.val(data[1]);
+            $input[0].value = data[1];
+            
+            // Create and dispatch native events
+            const inputEvent = new Event('input', { bubbles: true, cancelable: true });
+            const changeEvent = new Event('change', { bubbles: true, cancelable: true });
+            $input[0].dispatchEvent(inputEvent);
+            $input[0].dispatchEvent(changeEvent);
+            
+            // Also trigger jQuery events
+            $input.trigger('input').trigger('change');
+            
+            // Force Gutenberg block update
+            if (window.wp && window.wp.data && window.wp.data.dispatch) {
+                const { updateBlockAttributes } = window.wp.data.dispatch('core/block-editor');
+                const blockClientId = $selectedBlock.attr('data-block');
+                if (blockClientId) {
+                    updateBlockAttributes(blockClientId, { content: data[1] });
+                }
+            }
+            
+            $input.focus();
+            // Clear the global variable after use
+            setTimeout(() => {
+                window.PublitioSourceHtml = null;
+            }, 100);
 
         } else if (data[0] === 'iframe_gutenberg_private') {
             
-            //console.log("iframe_gutenberg_private");
-            let fileId = data[2];
-            let playerId = data[3];
-            let pubCode = `[publitio]player|${fileId}|${playerId}[/publitio]`;
-            window.PublitioSourceHtml = pubCode; //data[1];
-            $('.wp-block.is-selected .PublitioBlockContainer :input[type="text"]').attr('value', pubCode);           
-            $('.wp-block.is-selected .PublitioBlockContainer :input[type="text"]').focus();           
-          
+            let fileId = data[1];
+            let playerId = data[2];
+            playerId = playerId !== 'undefined' ? '|' + playerId : '';
+            let pubCode = `[publitio]iframe|${fileId}${playerId}[/publitio]`;
+            
+            window.PublitioSourceHtml = pubCode;
+            
+            const $selectedBlock = $('.wp-block.is-selected');
+            const $input = $('.wp-block.is-selected .PublitioBlockContainer :input[type="text"]');
+            
+            // Set the value and trigger all possible events
+            $input.val(pubCode);
+            $input[0].value = pubCode;
+            
+            // Create and dispatch native events
+            const inputEvent = new Event('input', { bubbles: true, cancelable: true });
+            const changeEvent = new Event('change', { bubbles: true, cancelable: true });
+            $input[0].dispatchEvent(inputEvent);
+            $input[0].dispatchEvent(changeEvent);
+            
+            // Also trigger jQuery events
+            $input.trigger('input').trigger('change');
+            
+            // Force Gutenberg block update
+            if (window.wp && window.wp.data && window.wp.data.dispatch) {
+                const { updateBlockAttributes } = window.wp.data.dispatch('core/block-editor');
+                const blockClientId = $selectedBlock.attr('data-block');
+                if (blockClientId) {
+                    updateBlockAttributes(blockClientId, { content: pubCode });
+                }
+            }
+            
+            $input.focus();
+            // Clear the global variable after use
+            setTimeout(() => {
+                window.PublitioSourceHtml = null;
+            }, 100);
+
         } else if (data[0] === 'iframe') {
-          if (tinymce.activeEditor !== null && typeof window.tinyMCE.execInstanceCommand !== 'undefined')  {
-            tinymce.activeEditor.execCommand('mceInsertContent', false, data[1]);
+          if (tinymce.activeEditor !== null && typeof window.tinyMCE.execCommand !== 'undefined')  {
+            tinymce.activeEditor.execCommand('InsertHTML', false, data[1] + '\n');
+            // tinymce.activeEditor.execCommand('mceInsertContent', false, data[1]);
           } else {
             //$("#publitio_block_id").html(data[1]);
             send_to_editor(data[1])
@@ -123,10 +312,12 @@
         } else if (data[0] === 'iframe_private') {
           let fileId = data[1];
           let playerId = data[2];
-          if (tinymce.activeEditor !== null && typeof window.tinyMCE.execInstanceCommand !== 'undefined')  {
-            tinymce.activeEditor.execCommand('mceInsertContent', false, `[publitio]iframe|${fileId}|${playerId}[/publitio]`);
+          playerId = playerId !== 'undefined' && playerId !== '' ? '|' + playerId : '';
+          if (tinymce.activeEditor !== null && typeof window.tinyMCE.execCommand !== 'undefined')  {
+            tinymce.activeEditor.execCommand('InsertHTML', false, `[publitio]iframe|${fileId}${playerId}[/publitio]`);
+            // tinymce.activeEditor.execCommand('mceInsertContent', false, `[publitio]iframe|${fileId}|${playerId}[/publitio]`);
           } else {
-            send_to_editor(`[publitio]iframe|${fileId}|${playerId}[/publitio]`)
+            send_to_editor(`[publitio]iframe|${fileId}${playerId}[/publitio]`)
           }
         }  else if (data[0] === 'player') {
           let fileId = data[1];
