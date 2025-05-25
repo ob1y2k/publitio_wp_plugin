@@ -12,25 +12,25 @@
     handleSettingsButtonClick()
     handleDefaultPlayerChange()
     window.onmessage = (event) => {
-      if (~event.origin.indexOf('https://publit.io') || ~event.origin.indexOf('https://dashboard.publit.io') || ~event.origin.indexOf('https://dev-dash.publit.io') || ~event.origin.indexOf('http://localhost')) {
+      if (~event.origin.indexOf('https://publit.io') || ~event.origin.indexOf('https://dashboard.publit.io') || ~event.origin.indexOf('https://dev-dash.publit.io') || ~event.origin.indexOf('http://localhost') || ~event.origin.indexOf('https://dev-www.publit.io')) {
         let data = event.data.split('|')
         
         //console.log("onmessage received " + data[0])  
 
-        // console.log(data)
-
         if (data[0] === 'link') {
-          if (tinymce.activeEditor !== null && typeof window.tinyMCE.execInstanceCommand !== 'undefined')  {
-            tinymce.activeEditor.execCommand('mceInsertContent', false, `<a href='${data[1]}'>${data[1]}</a>`)
+          if (tinymce.activeEditor !== null && typeof window.tinyMCE.execCommand !== 'undefined')  {
+            tinymce.activeEditor.execCommand('InsertHTML', false, `<a href='${data[1]}'>${data[1]}</a>`)
           } else {
             send_to_editor(data[1])
           }
         } else if (data[0] === 'link_private') {
           let fileId = data[1];
-          if (tinymce.activeEditor !== null && typeof window.tinyMCE.execInstanceCommand !== 'undefined')  {
-            tinymce.activeEditor.execCommand('mceInsertContent', false, `[publitio]link|${fileId}[/publitio]`)
+          let playerId = data[2];
+          playerId = (typeof playerId !== 'undefined' && playerId && playerId !== 'undefined') ? '|' + playerId : '';
+          if (tinymce.activeEditor !== null && typeof window.tinyMCE.execCommand !== 'undefined')  {
+            tinymce.activeEditor.execCommand('InsertHTML', false, `[publitio]link|${fileId}${playerId}[/publitio]`)
           } else {
-            send_to_editor(`[publitio]link|${fileId}[/publitio]`)
+            send_to_editor(`[publitio]link|${fileId}${playerId}[/publitio]`)
           }
         } else if (data[0] === 'link_gutenberg') {
           
@@ -77,9 +77,10 @@
         } else if (data[0] === 'link_gutenberg_private') {
 
           let fileId = data[1];
-          let folderId = data[2];
-          folderId = folderId !== 'undefined' ? '|'+folderId : '';
-          let pubCode = `[publitio]link|${fileId}${folderId}[/publitio]`;
+          let playerId = data[2];
+          playerId = (typeof playerId !== 'undefined' && playerId && playerId !== 'undefined') ? '|' + playerId : '';
+
+          let pubCode = `[publitio]link|${fileId}${playerId}[/publitio]`;
           window.PublitioSourceHtml = pubCode;
           
           const $selectedBlock = $('.wp-block.is-selected');
@@ -115,8 +116,8 @@
         } else if (data[0] === 'download') {
 
           let fileId = data[1];
-          if (tinymce.activeEditor !== null && typeof window.tinyMCE.execInstanceCommand !== 'undefined')  {
-            tinymce.activeEditor.execCommand('mceInsertContent', false, `[publitio]download|${fileId}[/publitio]`)
+          if (tinymce.activeEditor !== null && typeof window.tinyMCE.execCommand !== 'undefined')  {
+            tinymce.activeEditor.execCommand('InsertHTML', false, `[publitio]download|${fileId}[/publitio]`)
           } else {
             send_to_editor(`[publitio]download|${fileId}[/publitio]`)            
           }
@@ -124,11 +125,81 @@
         } else if (data[0] === 'download_gutenberg') {
 
             //console.log("download_gutenberg");
-            let fileId = data[1];
-            let pubCode = `[publitio]download|${fileId}[/publitio]`;
-            window.PublitioSourceHtml = pubCode; //data[1];
-            $('.wp-block.is-selected .PublitioBlockContainer :input[type="text"]').attr('value', pubCode);  // data[1]        
-            $('.wp-block.is-selected .PublitioBlockContainer :input[type="text"]').focus();   
+            let pubCode = data[1];
+            window.PublitioSourceHtml = pubCode;
+            
+            const $selectedBlock = $('.wp-block.is-selected');
+            const $input = $('.wp-block.is-selected .PublitioBlockContainer :input[type="text"]');
+            
+            // Set the value and trigger all possible events
+            $input.val(pubCode);
+            $input[0].value = pubCode;
+            
+            // Create and dispatch native events
+            const inputEvent = new Event('input', { bubbles: true, cancelable: true });
+            const changeEvent = new Event('change', { bubbles: true, cancelable: true });
+            $input[0].dispatchEvent(inputEvent);
+            $input[0].dispatchEvent(changeEvent);
+            
+            // Also trigger jQuery events
+            $input.trigger('input').trigger('change');
+            
+            // Force Gutenberg block update
+            if (window.wp && window.wp.data && window.wp.data.dispatch) {
+                const { updateBlockAttributes } = window.wp.data.dispatch('core/block-editor');
+                const blockClientId = $selectedBlock.attr('data-block');
+                if (blockClientId) {
+                    updateBlockAttributes(blockClientId, { content: pubCode });
+                }
+            }
+            
+            $input.focus();
+            // Clear the global variable after use
+            setTimeout(() => {
+                window.PublitioSourceHtml = null;
+            }, 100);
+            // let fileId = data[1];
+            // let pubCode = `[publitio]download|${fileId}[/publitio]`;
+            // window.PublitioSourceHtml = pubCode; //data[1];
+            // $('.wp-block.is-selected .PublitioBlockContainer :input[type="text"]').attr('value', pubCode);  // data[1]        
+            // $('.wp-block.is-selected .PublitioBlockContainer :input[type="text"]').focus();   
+        } else if (data[0] === 'download_gutenberg_private') {
+
+          //console.log("download_gutenberg");
+          let fileId = data[1];
+          let pubCode = `[publitio]download|${fileId}[/publitio]`;
+          window.PublitioSourceHtml = pubCode;
+          
+          const $selectedBlock = $('.wp-block.is-selected');
+          const $input = $('.wp-block.is-selected .PublitioBlockContainer :input[type="text"]');
+          
+          // Set the value and trigger all possible events
+          $input.val(pubCode);
+          $input[0].value = pubCode;
+          
+          // Create and dispatch native events
+          const inputEvent = new Event('input', { bubbles: true, cancelable: true });
+          const changeEvent = new Event('change', { bubbles: true, cancelable: true });
+          $input[0].dispatchEvent(inputEvent);
+          $input[0].dispatchEvent(changeEvent);
+          
+          // Also trigger jQuery events
+          $input.trigger('input').trigger('change');
+          
+          // Force Gutenberg block update
+          if (window.wp && window.wp.data && window.wp.data.dispatch) {
+              const { updateBlockAttributes } = window.wp.data.dispatch('core/block-editor');
+              const blockClientId = $selectedBlock.attr('data-block');
+              if (blockClientId) {
+                  updateBlockAttributes(blockClientId, { content: pubCode });
+              }
+          }
+          
+          $input.focus();
+          // Clear the global variable after use
+          setTimeout(() => {
+              window.PublitioSourceHtml = null;
+          }, 100);
 
         } else if (data[0] === 'source') {
           if (tinymce.activeEditor !== null && typeof window.tinyMCE.execCommand !== 'undefined')  {
@@ -140,7 +211,7 @@
         } else if (data[0] === 'source_private') {
           let fileId = data[1];
           let playerId = data[2];
-          playerId = playerId !== 'undefined' && playerId !== '' ? '|' + playerId : '';
+          playerId = (typeof playerId !== 'undefined' && playerId && playerId !== 'undefined') ? '|' + playerId : '';
           if (tinymce.activeEditor !== null && typeof window.tinyMCE.execCommand !== 'undefined')  {
             tinymce.activeEditor.execCommand('InsertHTML', false, `[publitio]source|${fileId}${playerId}[/publitio]`);
             // tinymce.activeEditor.execCommand('mceInsertContent', false, `[publitio]source|${fileId}|${playerId}[/publitio]`);
@@ -190,7 +261,7 @@
             
           let fileId = data[1];
           let playerId = data[2];
-          playerId = playerId !== 'undefined' ? '|' + playerId : '';
+          playerId = (typeof playerId !== 'undefined' && playerId && playerId !== 'undefined') ? '|' + playerId : '';
           let pubCode = `[publitio]source|${fileId}${playerId}[/publitio]`;
           
           window.PublitioSourceHtml = pubCode;
@@ -265,7 +336,7 @@
             
             let fileId = data[1];
             let playerId = data[2];
-            playerId = playerId !== 'undefined' ? '|' + playerId : '';
+            playerId = (typeof playerId !== 'undefined' && playerId && playerId !== 'undefined') ? '|' + playerId : '';
             let pubCode = `[publitio]iframe|${fileId}${playerId}[/publitio]`;
             
             window.PublitioSourceHtml = pubCode;
@@ -312,7 +383,7 @@
         } else if (data[0] === 'iframe_private') {
           let fileId = data[1];
           let playerId = data[2];
-          playerId = playerId !== 'undefined' && playerId !== '' ? '|' + playerId : '';
+          playerId = (typeof playerId !== 'undefined' && playerId && playerId !== 'undefined') ? '|' + playerId : '';
           if (tinymce.activeEditor !== null && typeof window.tinyMCE.execCommand !== 'undefined')  {
             tinymce.activeEditor.execCommand('InsertHTML', false, `[publitio]iframe|${fileId}${playerId}[/publitio]`);
             // tinymce.activeEditor.execCommand('mceInsertContent', false, `[publitio]iframe|${fileId}|${playerId}[/publitio]`);
