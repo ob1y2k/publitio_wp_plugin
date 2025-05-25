@@ -292,11 +292,11 @@ class Publitio_Admin {
 				#link logic
 				$id = $parts[1];
 				$player = @$parts[2];
-				$url = 'https://api.publit.io/v1/files/show/'.$id.'?'.$this->publitio_api_signature();
+				$url = 'https://api.publit.io/v1/files/show/'.$id.'?&player='.$player.$this->publitio_api_signature();
 				#die($url);
 				$response = $this->publitio_curl($url);
 				$response = json_decode($response, true);
-				$url_preview = @$response['url_preview'];
+				$url_preview = @$response['url_embed'];
 				if($url_preview==null) {
 					$url_preview = @$response['error']['message'];
 				}
