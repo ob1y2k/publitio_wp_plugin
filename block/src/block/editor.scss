@@ -16,11 +16,23 @@
 
   .PublitioBlockButtonContainer {
     text-align: center;
-    padding: 22% 0;
+    //padding: 22% 0;
     background: $off-white;
     border: 1px solid $gray;
     border-radius: 2px;
-    margin: 0 0 1.2rem 0;
+    //margin: 0 0 1.2rem 0;
+    height: 315px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    a{
+      text-decoration: none;
+
+      button{
+        display: flex;
+      }
+    }
   }
   
 }
