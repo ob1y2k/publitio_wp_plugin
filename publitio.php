@@ -16,7 +16,7 @@
  * Plugin Name:       Publitio
  * Plugin URI:        https://publit.io/
  * Description:       Simple Image & Video Asset Management in the cloud. 
- * Version:           2.2.0
+ * Version:           2.2.1
  * Author:            Publitio
  * Author URI:        https://publit.io
  * License:           GPL-2.0+
