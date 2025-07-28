@@ -111,6 +111,9 @@ Publitio is Platform-as-a-Service providing simple APIs for image & video manage
 = 2.2.0 =
 * publitio block improvements
 
+= 2.2.1 =
+* Small fix
+
 == Upgrade Notice ==
 
 = 1.0 =
@@ -176,4 +179,6 @@ Publitio Plugin (Version 2.0.0) is compatible with WP 5.0+ however you will need
 = 2.2.0 =
 * publitio block improvements
 
+= 2.2.1 =
+* Small fix
 

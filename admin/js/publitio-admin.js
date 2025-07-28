@@ -126,6 +126,7 @@
 
             //console.log("download_gutenberg");
             let pubCode = data[1];
+            pubCode = `[publitio]download|${pubCode}[/publitio]`;
             window.PublitioSourceHtml = pubCode;
             
             const $selectedBlock = $('.wp-block.is-selected');
