@@ -3,83 +3,348 @@
  * included in this file.
  */
 
- @import url('https://fonts.googleapis.com/css?family=Raleway');
+@import url('https://fonts.googleapis.com/css?family=Raleway');
+
+.publitio-page-warning-message {
+    display: none;
+    align-items: center;
+    gap: 10px;
+    color: rgba(133, 77, 14);
+    font-size: 0.8rem;
+    font-weight: bold;
+    padding-left: 10px;
+    background: rgb(254, 215, 170);
+    border-left: 5px solid rgba(133, 77, 14, 0.5);
+}
+
+.publitio-page-warning-message svg {
+    color: rgba(133, 77, 14, 0.5);
+    height: 25px;
+}
 
 .publitio-page-wrapper {
-    padding: 50px 50px;
+    position: relative;
+	margin-top: 20px;
+	margin-right: 20px;
+	max-width: 1280px;
     font-family: 'Raleway', sans-serif;
     font-size: 1.5rem;
+	background: white;
+    box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;}
+
+.publitio-page-header {
+	display: flex;
+	align-items: center;
+	width: 100%;
+	height: 100px;
+	background: #1e293b;
+	color: white;
+    justify-content: space-between;
 }
 
-.publitio-section-paragraph {
-    font-size: 1.1rem;
+.publitio-page-logo {
+	margin-left: 10px;
 }
 
-.publitio-a {
-    color: #4D6D90
+.publitio-page-data {
+    display: flex;
+	height: 120px;
+    width: 100%;
+    align-items: center;
+    border-bottom: 1px solid #ccc;
+    flex-direction: row;
 }
 
-.publitio-a:hover {
-    color: #4D6D90;
+.publitio-page-data-item {
+    height: 120px;
+	width: calc(100% / 3);
+    border-right: 1px solid #eeeeee7d;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+.publitio-page-data-item:last-child {
+    border-right: none;
+}
+
+.publitio-storage-info,
+.publitio-bandwidth-info,
+.publitio-plan-info {
+    font-size: .8rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.publitio-storage-used,
+.publitio-bandwidth-used {
+    border-bottom: 1px solid #eeeeee7d;
+    padding-bottom: .5rem;
+    margin-bottom: .5rem;
+}
+
+/* Donut Chart Styles */
+.publitio-storage-chart-container,
+.publitio-bandwidth-chart-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+.publitio-storage-chart,
+.publitio-bandwidth-chart {
+    position: relative;
+    width: 85px;
+    height: 85px;
+    border-radius: 50%;
+    background: conic-gradient(
+        #e5e7eb 0deg,
+        #e5e7eb 360deg
+    );
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.publitio-storage-inner,
+.publitio-bandwidth-inner {
+    width: 65px;
+    height: 65px;
+    background: white;
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.publitio-storage-percentage,
+.publitio-bandwidth-percentage {
+    font-size: 1rem;
+    font-weight: bold;
+    color: #4099de;
+    line-height: 1;
 }
 
 .publitio-emphasize {
-    font-weight: bold;
-    color: #4D6D90;
-}
-
-.publitio-section-title {
-    color: #4D6D90;
-    font-weight: 800;
-}
-
-.publitio-form-input, .publitio-form-select {
-    width: 100%;
-    padding: 12px 20px;
-    margin: 8px 0;
-    display: inline-block;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-sizing: border-box;
-    height: 40px !important;
-}
-
-.publitio-form-input:focus {
-    border-color: #4D6D90;
-}
-
-.publitio-form-label {
-    font-size: 1.1rem;
-    text-transform: uppercase;
+    color: #4099de;
     font-weight: bold;
 }
 
 .publitio-button {
-    background-color: #4D6D90;
-    padding: 10px 30px;
-    border: 1px solid #4D6D90;
+    background: #4099de;
     color: white;
-    border-radius: 3%;
-    box-shadow: 5px 5px 5px grey;
-}
-
-.publitio-button:hover {
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 1rem;
+    font-weight: bold;
     cursor: pointer;
-    text-shadow: -1px 0 grey, 0 1px grey, 1px 0 grey, 0 -1px grey;
+    margin-top: 10px;
+    transition: background 0.2s ease-in-out;
 }
 
-.publitio-button-section-wrapper {
-    text-align: center;
+.publitio-button:hover,
+.publitio-button:focus,
+.publitio-button:active {
+    background: #3586d0;
+    color: white;
 }
 
-.publitio-feedback-block {
-    font-size: 0.8rem;
+.publitio-settings-info-title {
+    border-bottom: 1px solid #eeeeee7d;
+    border-top: 1px solid #ccc;
+    padding: 20px 15px;
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: bold;
 }
 
-.publitio-feedback-error-block {
-    color: #cd3703;
+.publitio-settings {
+    padding: 10px 20px;
 }
 
-.publitio-feedback-success-block {
-    color: #4BB543;
+.publitio-field-wrapper {
+    border-bottom: 1px solid #eeeeee7d;
+    padding: 10px 0;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.publitio-field-wrapper:last-child {
+    border-bottom: none;
+}
+
+.publitio-field-wrapper:first-child {
+    padding-top: 0;
+}
+
+.publitio-field-wrapper label {
+    font-size: .9rem;
+    font-weight: bold;
+    width: 300px;
+	display: block;
+    padding-right: 20px;
+}
+
+.publitio-field-wrapper label small {
+    font-size: .7rem;
+    color: #666;
+    font-weight: normal;
+    line-height: 1;
+}
+
+.publitio-field-wrapper input,
+.publitio-field-wrapper select {
+	width: 300px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.publitio-settings-button {
+    background: #4099de;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    border: none;
+    outline: none;
+    margin: 20px;
+    transition: background 0.2s ease-in-out;
+}
+
+.publitio-settings-button:hover {
+    background: #3586d0;
+}
+
+.publitio-version {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    font-size: .8rem;
+    color: #666;
+    font-weight: normal;
+    line-height: 1;
+    margin: 5px;
+}
+
+.publitio-page-review {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: .8rem;
+    font-weight: normal;
+    line-height: 1.5;
+    margin: 20px;
+    border: 1px solid #4099de;
+    border-radius: 5px;
+    color: white;
+    padding: 10px 20px 10px 10px;
+    text-decoration: none;
+    transition: border-color 0.2s ease-in-out;
+}
+
+.publitio-page-review:hover,
+.publitio-page-review:focus,
+.publitio-page-review:active {
+    border-color: white;
+    color: white;
+}
+
+.publitio-page-review svg {
+    width: 30px;
+    height: 30px;
+    color: #4099de;
+}
+
+.publitio-page-footer-block {
+    height: 120px;
+    padding: 20px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 40px;
+    font-size: .8rem;
+    text-decoration: none;
+    color: #666;
+}
+
+.publitio-page-footer-block svg {
+    flex-shrink: 0;
+    height: 50px;
+    color: #4099de;
+}
+
+.publitio-page-footer-block:hover .publitio-emphasize {
+    text-decoration: underline;
+}
+
+@media (max-width: 1280px) {
+    .publitio-page-footer-block {
+        gap: 10px;
+        padding: 10px;
+    }
+}
+
+@media (max-width: 768px) {
+    .publitio-page-data {
+        flex-wrap: wrap;
+        height: auto;
+    }
+
+    .publitio-page-data-item:first-child {
+        border-right: 1px solid #ccc;
+    }
+
+    .publitio-page-data-item {
+        width: calc(50% - 1px);
+        border: 0;
+        border-bottom: 1px solid #ccc;
+    }
+
+    .publitio-page-data-item:last-child {
+        width: 100%;
+        border-bottom: 0;
+    }
+
+    .publitio-page-footer-block svg {
+        height: 30px;
+    }
+}
+
+@media (max-width: 480px) {
+    .publitio-page-review {
+        display: none;
+    }
+    .publitio-page-data-item {
+        width: 100%;
+    }
+    .publitio-page-data-item:first-child {
+        border-right: 0;
+    }
+    .publitio-page-data-item:last-child {
+        border-bottom: 0;
+    }
+
+    .publitio-field-wrapper {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    .publitio-field-wrapper label {
+        width: 100%;
+    }
+    .publitio-field-wrapper input,
+    .publitio-field-wrapper select {
+        width: 100%;
+    }
 }

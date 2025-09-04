@@ -4,10 +4,12 @@ class PublitioService {
 
     private $publitio_api;
     private $players;
+    private $wordpress_data;
 
     public function __construct() {
         $publitio_api = NULL;
         $players = [];
+        $wordpress_data = [];
     }
 
     public function on_load() {
@@ -47,26 +49,44 @@ class PublitioService {
         wp_send_json([
             'status' => PUBLITIO_SUCCESS,
             'players' => $this->players,
+            'wordpress_data' => $this->wordpress_data,
             'default_player_id' => get_option('publitio_default_player_id')
         ]);
     }
 
     public function check_api_key() {
-        $response = $this->get_players();
-        $this->handle_response($response);
+        $players_response = $this->get_players();
+        $wordpress_data_response = $this->get_wordpress_data();
+        
+        // Check players response first
+        $players_json = json_decode($players_response, true);
+        if (!$players_json['success'] && $players_json['error']['code'] === PUBLITIO_ERROR_UNAUTHORIZED) {
+            $this->handle_unauthorized();
+            return;
+        } else if (!$players_json['success']) {
+            $this->handle_error($players_json['error']['code']);
+            return;
+        }
+        
+        // Check wordpress_data response
+        $wordpress_data_json = json_decode($wordpress_data_response, true);
+        if ($wordpress_data_json['success']) {
+            $this->wordpress_data = $wordpress_data_json['message'] ?? [];
+        } else {
+            // Log error but don't fail the entire request
+            error_log('Publitio wordpress_data API call failed: ' . $wordpress_data_response);
+            $this->wordpress_data = [];
+        }
+        
+        // Handle successful players response
+        $this->handle_success($players_json);
     }
 
     public function get_players() {
         return $this->publitio_api->call(PUBLITIO_API_PLAYER_LIST, 'GET');
     }
 
-    public function set_default_player($player_id) {
-        if (PublitioAuthService::is_user_authenticated()) {
-            update_option('publitio_default_player_id', $player_id);
-            wp_send_json([
-                'status' => PUBLITIO_SUCCESS,
-                'player_id' => $player_id
-            ]);
-        }
+    public function get_wordpress_data() {
+        return $this->publitio_api->call(PUBLITIO_API_WORDPRESS_DATA, 'GET');
     }
 }

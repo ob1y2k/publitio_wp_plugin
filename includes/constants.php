@@ -10,3 +10,4 @@ define('PUBLITIO_DEFAULT_PLAYER', 'publitio_default_player_id');
 
 define('PUBLITIO_API_FILE_LIST', '/files/list');
 define('PUBLITIO_API_PLAYER_LIST', '/players/list');
+define('PUBLITIO_API_WORDPRESS_DATA', '/wordpress/data');

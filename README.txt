@@ -114,6 +114,13 @@ Publitio is Platform-as-a-Service providing simple APIs for image & video manage
 = 2.2.1 =
 * Small fix
 
+= 2.2.2 =
+* SECURITY: Fixed arbitrary file read vulnerability (CVE-2025-31800)
+* SECURITY: Added input validation and sanitization for shortcode parameters
+* SECURITY: Implemented URL whitelist validation for API calls
+* SECURITY: Added proper authorization checks for shortcode usage
+* SECURITY: Enhanced CURL security with timeout and redirect restrictions
+
 == Upgrade Notice ==
 
 = 1.0 =
@@ -182,3 +189,9 @@ Publitio Plugin (Version 2.0.0) is compatible with WP 5.0+ however you will need
 = 2.2.1 =
 * Small fix
 
+= 2.2.2 =
+* SECURITY: Fixed arbitrary file read vulnerability (CVE-2025-31800)
+* SECURITY: Added input validation and sanitization for shortcode parameters
+* SECURITY: Implemented URL whitelist validation for API calls
+* SECURITY: Added proper authorization checks for shortcode usage
+* SECURITY: Enhanced CURL security with timeout and redirect restrictions
