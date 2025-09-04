@@ -11,7 +11,7 @@
 
     class PublitioAPI {
         private $_version = '1.0';
-        private $_url = 'http://api.publit.io/v1';
+        private $_url = 'https://api.publit.io/v1';
         private $_library;
 
         private $_key, $_secret;

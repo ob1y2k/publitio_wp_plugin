@@ -7,10 +7,11 @@
     SUCCESS: 200
   }
 
+  let settingsLoading = false
+
   $(function () {
     tryToGetPlayers()
     handleSettingsButtonClick()
-    handleDefaultPlayerChange()
     window.onmessage = (event) => {
       if (~event.origin.indexOf('https://publit.io') || ~event.origin.indexOf('https://dashboard.publit.io') || ~event.origin.indexOf('https://dev-dash.publit.io') || ~event.origin.indexOf('http://localhost') || ~event.origin.indexOf('https://dev-www.publit.io')) {
         let data = event.data.split('|')
@@ -406,25 +407,85 @@
     }
   }); 
 
-  function clearFeedbackBlocks() {
-    $('#publitio-feedback-error-block').empty();
-    $('#publitio-feedback-success-block').empty();
-    $('#publitio-feedback-player-success-block').empty();
-    $('#publitio-feedback-player-error-block').empty();
+  function handleWordPressData(wordpressData) {
+    updateStorageChart(wordpressData)
+  }
+
+  function updateStorageChart(wordpressData) {
+    if (!wordpressData) {
+      return
+    }
+
+    const usedStorage = wordpressData.account_storage ?? '0B'
+    const maxStorage = wordpressData.account_max_storage ?? '0B'
+    const percentStorage = wordpressData.account_storage_percentage ?? 0
+    
+    const $chartStorage = $('.publitio-storage-chart')
+    const $percentageStorage = $('.publitio-storage-percentage')
+    
+    if ($chartStorage.length && $percentageStorage.length) {
+      $percentageStorage.text(percentStorage + '%')
+      $chartStorage.attr('data-percentage', percentStorage)
+      
+      const degrees = percentStorage * 3.6
+      const gradient = `conic-gradient(
+        #4099de 0deg,
+        #4099de ${degrees}deg,
+        #e5e7eb ${degrees}deg,
+        #e5e7eb 360deg
+      )`
+      $chartStorage.css('background', gradient)
+            
+      $('.publitio-storage-used').text(`Storage used: ${usedStorage}`)
+      $('.publitio-storage-limit').text(`Storage limit: ${maxStorage}`)
+    }
+
+    const usedBandwidth = wordpressData.account_bandwidth ?? '0B'
+    const maxBandwidth = wordpressData.account_max_bandwidth ?? '0B'
+    const percentBandwidth = wordpressData.account_bandwidth_percentage ?? 0
+
+    const $chartBandwidth = $('.publitio-bandwidth-chart')
+    const $percentageBandwidth = $('.publitio-bandwidth-percentage')
+    
+    if ($chartBandwidth.length && $percentageBandwidth.length) {
+      $percentageBandwidth.text(percentBandwidth + '%')
+      $chartBandwidth.attr('data-percentage', percentBandwidth)
+      
+      const degrees = percentBandwidth * 3.6
+      const gradient = `conic-gradient(
+        #4099de 0deg,
+        #4099de ${degrees}deg,
+        #e5e7eb ${degrees}deg,
+        #e5e7eb 360deg
+      )`
+      $chartBandwidth.css('background', gradient)
+            
+      $('.publitio-bandwidth-used').text(`Bandwidth used: ${usedBandwidth}`)
+      $('.publitio-bandwidth-limit').text(`Bandwidth limit: ${maxBandwidth}`)
+    }
+
+    const userPlan = wordpressData.account_plan ?? 'None'
+    $('#publitio-plan-used').text(userPlan)
   }
 
   function addPlayersToPage(players, defaultPlayerId = '') {
     clearPlayerOptions()
-    if(players != undefined) {
+    $('<option value="" selected disabled>None</option>').appendTo($('#publitio-default-player'));
+    if(players != undefined && players.length > 0) {
 	    players.forEach((player) => {
 	      $('<option value="' + player.id + '">' + assembleOption(player) + '</option>').appendTo($('#publitio-default-player'));
 	    })
-	    setSelectedPlayer(defaultPlayerId);
-	}
+
+      if(defaultPlayerId === '' || defaultPlayerId === false) {
+        setSelectedPlayer('')
+      } else {
+        setSelectedPlayer(defaultPlayerId)
+      }
+    }
   }
 
   function setSelectedPlayer(id) {
-    $('#publitio-default-player > option[value="' + id +'"]').attr("selected", "selected");
+    $('#publitio-default-player').val(id);
   }
 
   function assembleOption(player) {
@@ -435,20 +496,27 @@
 
   function tryToGetPlayers() {
     jQuery.get(ajaxurl, { action: 'get_players_action' }, function(response) {
-      addPlayersToPage(response.players, response.default_player_id)
+      if(response == 0) {
+        $('.publitio-page-warning-message').css('display', 'flex')
+        $('#publitio-page-data').css('opacity', 0.5)
+        $('#publitio-page-data').css('pointer-events', 'none')
+        $('#publitio-default-player-wrapper').css('opacity', 0.5)
+        $('#publitio-default-player-wrapper').css('pointer-events', 'none')
+        addPlayersToPage([])
+      } else {
+        addPlayersToPage(response.players, response.default_player_id)
+        handleWordPressData(response.wordpress_data)
+        $('.publitio-page-warning-message').css('display', 'none')
+        $('#publitio-page-data').css('opacity', 1)
+        $('#publitio-page-data').css('pointer-events', 'auto')
+        $('#publitio-default-player-wrapper').css('opacity', 1)
+        $('#publitio-default-player-wrapper').css('pointer-events', 'auto')
+      }
     })
-  }
-
-  function showFeedbackBlock(elem, content) {
-    $(elem).text(content)
-    setTimeout(function() {
-      clearFeedbackBlocks()
-    }, 3000)
   }
 
   function clearPlayerOptions() {
     $('#publitio-default-player').empty()
-    $('<option selected hidden disabled>None</option>').appendTo($('#publitio-default-player'));
   }
 
   function getAutoplayTextOption(autoPlay) {
@@ -460,46 +528,72 @@
     return 'mouseover';
   }
 
-  function handleDefaultPlayerChange() {
-    $('#publitio-default-player').bind('change', function (event) {
+  function handleSettingsButtonClick() {
+    $('#publitio-update-settings-button').on('click', function (event) {
+      if(settingsLoading) return
+      setLoading(true)
+
+      let api_key = $('#api-key').val()
+      let api_secret = $('#api-secret').val()
+      let default_player_id = $('#publitio-default-player').val()
+      if(api_key === '' || api_secret === '') {
+        showToast('⚠ Please fill in all fields', 'error');
+        setLoading(false)
+        return
+      }
       jQuery.post(ajaxurl, {
-        action: 'set_default_player',
-        default_player_id: event.target.value,
+        action: 'update_settings_action',
+        api_secret: api_secret,
+        api_key: api_key,
+        default_player_id: default_player_id,
         wpnonce: $('#_wpnonce').val()
       }, function (response) {
         if (response.status === STATUSES.ERROR_UNAUTHORIZED) {
-          showFeedbackBlock($('#publitio-feedback-player-error-block'), 'Wrong credentials');
+          showToast('⚠ Bad credentials', 'error');
         } else if (response.status === STATUSES.SUCCESS) {
-          showFeedbackBlock($('#publitio-feedback-player-success-block'), 'Great!');
+          showToast('🎉 Great, settings updated!', 'success');
+          tryToGetPlayers()
         } else {
-          showFeedbackBlock($('#publitio-feedback-player-error-block'), 'Something went wrong.');
+          showToast('⚠ Something went wrong', 'error');
         }
+        setLoading(false)
       });
     });
   }
 
-  function handleSettingsButtonClick() {
-    $('#publitio-update-settings-button').bind('click', function (event) {
-      clearFeedbackBlocks()
-      jQuery.post(ajaxurl, {
-        action: 'update_settings_action',
-        api_secret: $('#api-secret').val(),
-        api_key: $('#api-key').val(),
-        wpnonce: $('#_wpnonce').val()
-      }, function (response) {
-        if (response.status === STATUSES.ERROR_UNAUTHORIZED) {
-          showFeedbackBlock($('#publitio-feedback-error-block'), 'Wrong credentials');
-        } else if (response.status === STATUSES.SUCCESS) {
-          showFeedbackBlock($('#publitio-feedback-success-block'), 'Great!');
-          addPlayersToPage(response.players)
-        } else {
-          showFeedbackBlock($('#publitio-feedback-error-block'), 'Something went wrong.');
-        }
-      });
-    });
+  function setLoading(loading) {
+    if(loading) {
+      $('#publitio-update-settings-button').text('Updating Settings...')
+      $('#publitio-update-settings-button').css('opacity', 0.5)
+      $('#publitio-update-settings-button').css('cursor', 'not-allowed')
+    } else {
+      $('#publitio-update-settings-button').text('Update Settings')
+      $('#publitio-update-settings-button').css('opacity', 1)
+      $('#publitio-update-settings-button').css('cursor', 'pointer')
+    }
+    $('#publitio-update-settings-button').prop('disabled', loading)
+  }
+
+  function showToast(content, type) {
+    let style = {
+      background: "linear-gradient(135deg,#73a5ff,#4099de)",
+      borderRadius: "5px",
+    }
+
+    if(type === 'error') {
+      style = {
+        background: "linear-gradient(135deg,#ED775A,#E4004B)",
+        borderRadius: "5px",
+      }
+    }
+
+    Toastify({
+      text: content,
+      duration: 3000,
+      gravity: 'bottom',
+      position: 'center',
+      style: style,
+    }).showToast();
   }
 
 })(jQuery);
-
-
-
