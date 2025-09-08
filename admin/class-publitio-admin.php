@@ -83,11 +83,8 @@ class Publitio_Admin {
 		 * class.
 		 */
 
-		// Only load styles on Publitio settings page
-		if (isset($_GET['page']) && $_GET['page'] === 'publitio-settings') {
-			wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . '/css/publitio-admin.css', array(), $this->version, 'all' );
-			wp_enqueue_style( $this->plugin_name . '-toastify-css', 'https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css' );
-		}
+		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . '/css/publitio-admin.css', array(), $this->version, 'all' );
+		wp_enqueue_style( $this->plugin_name . '-toastify-css', 'https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css' );
 	}
 
 	/**
@@ -109,12 +106,8 @@ class Publitio_Admin {
 		 * class.
 		 */
 
-		// Only load script on Publitio settings page
-		if (isset($_GET['page']) && $_GET['page'] === 'publitio-settings') {
-			wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . '/js/publitio-admin.js', array( 'jquery' ), $this->version, false );
-			wp_enqueue_script( $this->plugin_name . '-toastify-js', 'https://cdn.jsdelivr.net/npm/toastify-js', array( 'jquery' ), null, true );
-		}
-
+		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . '/js/publitio-admin.js', array( 'jquery' ), $this->version, false );
+		wp_enqueue_script( $this->plugin_name . '-toastify-js', 'https://cdn.jsdelivr.net/npm/toastify-js', array( 'jquery' ), null, true );
 	}
 
 	public function add_plugin_admin_menu() {
