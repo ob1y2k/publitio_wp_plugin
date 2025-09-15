@@ -87,6 +87,9 @@
         <p>
           For additional customization and security (CNAME, Domain Level protection, etc.) visit <a class="publitio-a" target="_blank" href="https://dashboard.publit.io/app/dashboards/settings">Publitio Settings</a>  
         </p>
+        <p>
+          Check out the tutorial <a class="publitio-a" target="_blank" href="https://publit.io/community/blog/how-to-setup-publitio-wordpress-plugin">How to setup Publitio Wordpress Plugin</a>
+        </p>
       </div>
     </div>
 
