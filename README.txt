@@ -121,6 +121,9 @@ Publitio is Platform-as-a-Service providing simple APIs for image & video manage
 * SECURITY: Added proper authorization checks for shortcode usage
 * SECURITY: Enhanced CURL security with timeout and redirect restrictions
 
+= 2.2.2 =
+* Minor fixes
+
 == Upgrade Notice ==
 
 = 1.0 =
@@ -195,3 +198,6 @@ Publitio Plugin (Version 2.0.0) is compatible with WP 5.0+ however you will need
 * SECURITY: Implemented URL whitelist validation for API calls
 * SECURITY: Added proper authorization checks for shortcode usage
 * SECURITY: Enhanced CURL security with timeout and redirect restrictions
+
+= 2.2.2 =
+* Minor fixes

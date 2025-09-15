@@ -264,11 +264,6 @@ class Publitio_Admin {
 	}	
 
 	public function publitio_shortcode($atts, $content = null) {
-		// Security: Check user capabilities
-		if (!current_user_can('edit_posts')) {
-			return '[publitio] Insufficient permissions [/publitio]';
-		}
-		
 		if($content) {
 			// Security: Sanitize content input
 			$content = sanitize_text_field($content);
@@ -385,7 +380,7 @@ class Publitio_Admin {
 		curl_setopt($ch, CURLOPT_TIMEOUT, 30); // Security: Add timeout
 		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, false); // Security: Disable redirects
 		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true); // Security: Verify SSL
-		curl_setopt($ch, CURLOPT_USERAGENT, 'Publitio-WordPress-Plugin/2.2.2'); // Security: Set user agent
+		curl_setopt($ch, CURLOPT_USERAGENT, 'Publitio-WordPress-Plugin/2.2.3'); // Security: Set user agent
 
 		$response = curl_exec($ch);
 		curl_close($ch);
