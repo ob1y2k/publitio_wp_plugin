@@ -515,6 +515,34 @@
     })
   }
 
+  function authError() {
+    $('.publitio-page-warning-message').css('display', 'flex')
+    $('#publitio-page-data').css('opacity', 0.5)
+    $('#publitio-page-data').css('pointer-events', 'none')
+    $('#publitio-default-player-wrapper').css('opacity', 0.5)
+    $('#publitio-default-player-wrapper').css('pointer-events', 'none')
+    addPlayersToPage([])
+
+    const $chartStorage = $('.publitio-storage-chart')
+    const $percentageStorage = $('.publitio-storage-percentage')
+    $percentageStorage.text('0%')
+    $chartStorage.attr('data-percentage', 0)
+    $chartStorage.css('background', 'conic-gradient(#e5e7eb 0deg, #e5e7eb 360deg )')
+    $('.publitio-storage-used').text(`Storage used: 0B`)
+    $('.publitio-storage-limit').text(`Storage limit: 0B`)
+
+    const $chartBandwidth = $('.publitio-bandwidth-chart')
+    const $percentageBandwidth = $('.publitio-bandwidth-percentage')
+    $percentageBandwidth.text('0%')
+    $chartBandwidth.attr('data-percentage', 0)
+    $chartBandwidth.css('background', 'conic-gradient(#e5e7eb 0deg, #e5e7eb 360deg )')
+    $('.publitio-bandwidth-used').text(`Bandwidth used: 0B`)
+    $('.publitio-bandwidth-limit').text(`Bandwidth limit: 0B`)
+
+    $('#publitio-plan-used').text('None')
+
+  }
+
   function clearPlayerOptions() {
     $('#publitio-default-player').empty()
   }
@@ -549,11 +577,13 @@
         wpnonce: $('#_wpnonce').val()
       }, function (response) {
         if (response.status === STATUSES.ERROR_UNAUTHORIZED) {
+          authError()
           showToast('⚠ Bad credentials', 'error');
         } else if (response.status === STATUSES.SUCCESS) {
           showToast('🎉 Great, settings updated!', 'success');
           tryToGetPlayers()
         } else {
+          authError()
           showToast('⚠ Something went wrong', 'error');
         }
         setLoading(false)
