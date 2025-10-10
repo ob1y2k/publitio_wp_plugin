@@ -36,6 +36,7 @@ if ( ! defined( 'WPINC' ) ) {
  * Rename this for your plugin and update it as you release new versions.
  */
 define( 'PUBLITIO_PLUGIN_NAME_VERSION', '2.2.4' );
+define( 'PUBLITIO_PLUGIN_NAME', plugin_basename(__FILE__) );
 
 /**
  * The code that runs during plugin activation.
