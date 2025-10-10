@@ -118,6 +118,17 @@ class Publitio_Admin {
 		include_once('partials/publitio-settings-page.php');
 	}
 
+	/**
+     * Add settings link in Plugins page
+     */
+    public function publitio_settings_link($links)
+    {
+        $settings_link = '<a href="admin.php?page=publitio-settings">Settings</a>';
+        array_push($links, $settings_link);
+
+        return $links;
+    }
+
 	public function update_settings() {
 		// Check the nonce
 		if (!isset( $_POST['wpnonce']) || !wp_verify_nonce($_POST['wpnonce'], 'publitio_settings_nonce_action')) {
@@ -380,7 +391,7 @@ class Publitio_Admin {
 		curl_setopt($ch, CURLOPT_TIMEOUT, 30); // Security: Add timeout
 		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, false); // Security: Disable redirects
 		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true); // Security: Verify SSL
-		curl_setopt($ch, CURLOPT_USERAGENT, 'Publitio-WordPress-Plugin/2.2.3'); // Security: Set user agent
+		curl_setopt($ch, CURLOPT_USERAGENT, 'Publitio-WordPress-Plugin/2.2.4'); // Security: Set user agent
 
 		$response = curl_exec($ch);
 		curl_close($ch);
