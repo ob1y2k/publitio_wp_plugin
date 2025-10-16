@@ -1,0 +1,97 @@
+/* Custom Publitio icon for Elementor panel */
+.icon .publitio-icon {
+    display: inline-block;
+    width: 28px;
+    height: 28px;
+    background-image: url('../../admin/images/cloud-outline-icon.svg');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    margin-bottom: -5px;
+}
+
+.icon .publitio-icon:before {
+    content: '';
+}
+
+/* Info box in widget controls */
+.publitio-info-box {
+    padding: 15px;
+    border-radius: 10px;
+    border: 1px dashed #6a6a6a;
+}
+
+.publitio-info-box p:first-child {
+    margin: 0 0 10px 0;
+}
+
+.publitio-info-box p:last-child {
+    margin: 0;
+    font-size: 13px;
+}
+
+/* Widget button wrapper */
+.publitio-widget-button-wrapper {
+    text-align: center;
+    padding: 40px;
+    background: #f5f5f5;
+    border: 2px dashed #ddd;
+}
+
+/* Select button */
+.publitio-select-button {
+    display: inline-flex;
+    align-items: center;
+    padding: 15px 30px;
+    border: 1px solid #4099de;
+    color: #4099de;
+    text-decoration: none;
+    border-radius: 3px;
+    font-size: 16px;
+}
+
+.publitio-select-button img {
+    margin-right: 10px;
+}
+
+/* Shortcode placeholder (success state) */
+.publitio-shortcode-placeholder {
+    padding: 20px;
+    background: #e8f5e9;
+    border: 2px solid #4caf50;
+    text-align: center;
+}
+
+.publitio-shortcode-placeholder p {
+    margin: 0;
+    color: #2e7d32;
+}
+
+.publitio-shortcode-placeholder .publitio-shortcode-content {
+    margin: 10px 0 0 0;
+    font-family: monospace;
+    font-size: 12px;
+    color: #555;
+}
+
+.publitio-shortcode-placeholder .publitio-preview-note {
+    margin: 10px 0 0 0;
+    font-size: 11px;
+    color: #666;
+}
+
+/* Media preview */
+.publitio-media-preview {
+    position: relative;
+}
+
+.publitio-media-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: rgba(76, 175, 80, 0.9);
+    color: white;
+    padding: 5px 10px;
+    border-radius: 3px;
+    font-size: 11px;
+}

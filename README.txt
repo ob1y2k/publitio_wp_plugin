@@ -24,7 +24,7 @@ and focus on their core activities while ensuring efficient, scalable management
 
 Features:
 
-    - Easy Embedding: Add images, videos, audios, documents, and archives files directly in Gutenberg and classic editors using the Publitio block for quick and intuitive embedding.
+    - Easy Embedding: Add images, videos, audios, documents, and archives files directly in Gutenberg, Elementor and classic editors using the Publitio block for quick and intuitive embedding.
     - Direct Uploads: Upload new media files to [Publitio](https://publit.io) cloud storage without leaving the WordPress editor.
     - Media Library Browsing: Browse your entire [Publitio](https://publit.io) media library in a popup window, selecting files for instant insertion.
     - Customizable Publitio Player: Embed videos and media with [Publitio](https://publit.io)’s fully customizable HTML5 player supporting VAST/IMA ad tags for monetization and multi-format playback.
@@ -91,10 +91,12 @@ Support is available by contacting support@publit.io, using on site support webw
 
 1. Publitio Settings page
 2. Publitio block in gutenberg editor
-2. Publitio Media Library page
-3. Publitio Upload File page
-4. Publitio Media Player in post
-5. Embedded content in a post
+3. Publitio Media Library page
+4. Publitio Upload File page
+5. Publitio Media Player in post
+6. Embedded content in a post
+7. Publitio Elementor widget
+8. Publitio Elementor Media Library page
 
 == Changelog ==
 
@@ -177,6 +179,9 @@ Support is available by contacting support@publit.io, using on site support webw
 = 2.2.4 =
 * Quality of life fixes
 
+= 2.2.5 =
+* Added Elementor widget
+
 == Upgrade Notice ==
 
 = 1.0 =
@@ -257,3 +262,6 @@ Publitio Plugin (Version 2.0.0) is compatible with WP 5.0+ however you will need
 
 = 2.2.4 =
 * Quality of life fixes
+
+= 2.2.5 =
+* Added Elementor widget

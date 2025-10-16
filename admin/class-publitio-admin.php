@@ -391,7 +391,7 @@ class Publitio_Admin {
 		curl_setopt($ch, CURLOPT_TIMEOUT, 30); // Security: Add timeout
 		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, false); // Security: Disable redirects
 		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true); // Security: Verify SSL
-		curl_setopt($ch, CURLOPT_USERAGENT, 'Publitio-WordPress-Plugin/2.2.4'); // Security: Set user agent
+		curl_setopt($ch, CURLOPT_USERAGENT, 'Publitio-WordPress-Plugin/'.PUBLITIO_PLUGIN_NAME_VERSION); // Security: Set user agent
 
 		$response = curl_exec($ch);
 		curl_close($ch);
@@ -456,6 +456,95 @@ class Publitio_Admin {
 		}
 		
 		return true;
+	}
+
+	/**
+	 * Initialize Elementor integration
+	 * Should be called on plugins_loaded hook
+	 *
+	 * @since    2.2.4
+	 */
+	public function init_elementor() {
+		if ($this->is_elementor_active()) {
+			$this->load_elementor_hooks();
+		}
+	}
+
+	/**
+	 * Check if Elementor plugin is activated
+	 *
+	 * @since    2.2.4
+	 * @return   bool    True if Elementor is active, false otherwise
+	 */
+	public function is_elementor_active() {
+		return did_action('elementor/loaded');
+	}
+
+	/**
+	 * Load Elementor widget hooks
+	 *
+	 * @since    2.2.4
+	 */
+	public function load_elementor_hooks() {
+		add_action('elementor/widgets/widgets_registered', array($this, 'register_elementor_widget'));
+		add_action('wp_enqueue_scripts', array($this, 'register_elementor_assets'));
+		add_action('elementor/editor/before_enqueue_scripts', array($this, 'enqueue_elementor_editor_assets'));
+	}
+
+	/**
+	 * Register Elementor widget
+	 *
+	 * @since    2.2.4
+	 */
+	public function register_elementor_widget() {
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'elementor/widget-publitio-media.php';
+		\Elementor\Plugin::instance()->widgets_manager->register_widget_type( new \Publitio_Elementor_Widget\Publitio_Media_Widget() );
+	}
+
+	/**
+	 * Register Elementor assets - widget will auto-enqueue via get_script_depends()
+	 *
+	 * @since    2.2.4
+	 */
+	public function register_elementor_assets() {
+		wp_register_script(
+			'publitio-elementor-widget',
+			plugin_dir_url( dirname( __FILE__ ) ) . 'elementor/assets/publitio-elementor-widget.js',
+			array('jquery'),
+			$this->version,
+			true
+		);
+
+		wp_register_style(
+			'publitio-elementor-style',
+			plugin_dir_url( dirname( __FILE__ ) ) . 'elementor/assets/publitio-elementor-widget.css',
+			array(),
+			$this->version
+		);
+	}
+
+	/**
+	 * Enqueue assets specifically for Elementor editor
+	 *
+	 * @since    2.2.4
+	 */
+	public function enqueue_elementor_editor_assets() {
+		// Register assets (needed in editor context where wp_enqueue_scripts doesn't run)
+		$this->register_elementor_assets();
+		
+		// Enqueue scripts and styles
+		wp_enqueue_script('publitio-elementor-widget');
+		wp_enqueue_style('publitio-elementor-style');
+		
+		// Pass settings to JavaScript
+		wp_localize_script('publitio-elementor-widget', 'publitioSettings', array(
+			'apiKey' => get_option(PUBLITIO_KEY_FIELD),
+			'apiSecret' => get_option(PUBLITIO_SECRET_FIELD),
+			'defaultPlayer' => get_option(PUBLITIO_DEFAULT_PLAYER)
+		));
+		
+		// Load ThickBox for modal
+		add_thickbox();
 	}
 
 	/**
