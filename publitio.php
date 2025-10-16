@@ -16,7 +16,7 @@
  * Plugin Name:       Publitio
  * Plugin URI:        https://publit.io/
  * Description:       Publitio plugin integrates Publitio cloud media into WordPress with a simple block for effortless uploading, browsing, and embedding of image, video, audio, document or archive files right within the editor.
- * Version:           2.2.4
+ * Version:           2.2.5
  * Author:            Publitio
  * Author URI:        https://publit.io
  * License:           GPL-2.0+
