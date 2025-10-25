@@ -494,24 +494,29 @@
     return player.id + ' (skin: ' + player.skin + adtag + ', autoplay: ' + autoplay + ')';
   }
 
+  function updateUIWithData(response) {
+    if(response == 0) {
+      $('.publitio-page-warning-message').css('display', 'flex')
+      $('#publitio-page-data').css('opacity', 0.5)
+      $('#publitio-page-data').css('pointer-events', 'none')
+      $('#publitio-default-player-wrapper').css('opacity', 0.5)
+      $('#publitio-default-player-wrapper').css('pointer-events', 'none')
+
+      addPlayersToPage([])
+    } else {
+      addPlayersToPage(response.players, response.default_player_id)
+      handleWordPressData(response.wordpress_data)
+      $('.publitio-page-warning-message').css('display', 'none')
+      $('#publitio-page-data').css('opacity', 1)
+      $('#publitio-page-data').css('pointer-events', 'auto')
+      $('#publitio-default-player-wrapper').css('opacity', 1)
+      $('#publitio-default-player-wrapper').css('pointer-events', 'auto')
+    }
+  }
+
   function tryToGetPlayers() {
     jQuery.get(ajaxurl, { action: 'get_players_action' }, function(response) {
-      if(response == 0) {
-        $('.publitio-page-warning-message').css('display', 'flex')
-        $('#publitio-page-data').css('opacity', 0.5)
-        $('#publitio-page-data').css('pointer-events', 'none')
-        $('#publitio-default-player-wrapper').css('opacity', 0.5)
-        $('#publitio-default-player-wrapper').css('pointer-events', 'none')
-        addPlayersToPage([])
-      } else {
-        addPlayersToPage(response.players, response.default_player_id)
-        handleWordPressData(response.wordpress_data)
-        $('.publitio-page-warning-message').css('display', 'none')
-        $('#publitio-page-data').css('opacity', 1)
-        $('#publitio-page-data').css('pointer-events', 'auto')
-        $('#publitio-default-player-wrapper').css('opacity', 1)
-        $('#publitio-default-player-wrapper').css('pointer-events', 'auto')
-      }
+      updateUIWithData(response)
     })
   }
 
@@ -581,7 +586,7 @@
           showToast('⚠ Bad credentials', 'error');
         } else if (response.status === STATUSES.SUCCESS) {
           showToast('🎉 Great, settings updated!', 'success');
-          tryToGetPlayers()
+          updateUIWithData(response)
         } else {
           authError()
           showToast('⚠ Something went wrong', 'error');

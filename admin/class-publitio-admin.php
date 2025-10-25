@@ -61,6 +61,11 @@ class Publitio_Admin {
 		$this->plugin_name = $plugin_name;
 		$this->version = $version;
 		$this->publitio = new PublitioService;
+		
+		// Clear cache when on Publitio settings page to ensure fresh data
+		if (isset($_GET['page']) && $_GET['page'] === 'publitio-settings') {
+			add_action('admin_init', array($this, 'clear_cache_on_settings_page'));
+		}
 
 	}
 
@@ -116,6 +121,10 @@ class Publitio_Admin {
 
 	public function display_plugin_settings_page() {
 		include_once('partials/publitio-settings-page.php');
+	}
+
+	public function clear_cache_on_settings_page() {
+		$this->publitio->clear_wordpress_data_cache();
 	}
 
 	/**
@@ -465,8 +474,14 @@ class Publitio_Admin {
 	 * @since    2.2.4
 	 */
 	public function init_elementor() {
+		// Only initialize if Elementor is active
 		if ($this->is_elementor_active()) {
-			$this->load_elementor_hooks();
+			$this->publitio->safe_init();
+			
+			// Only load Elementor hooks if account is not Free
+			if (!$this->publitio->is_account_plan_free()) {
+				$this->load_elementor_hooks();
+			}
 		}
 	}
 
