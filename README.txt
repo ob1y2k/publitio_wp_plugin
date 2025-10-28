@@ -8,43 +8,95 @@ Stable tag: 5.0.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Simple Image & Video Asset Management in the cloud with Publitio API.
+Publitio plugin integrates Publitio cloud media into WordPress with a simple block for effortless uploading, browsing, and embedding of image, video, audio, document or archive files right within the editor.
 
 == Description ==
 
-Publitio offers powerfull REST & URL-BASED APIs for [Media Asset Management in the cloud](https://publit.io). We believe development must be an enjoyable, creative experience to be truly fulfilling. Publitio attempts to take the pain out of whole MAM process by easing common tasks used by majority of web & mobile publishers, such as media files uploading, hosting, processing, publishing, monetization and management.
+Publitio WordPress Integration Plugin
 
-Read tutorial [How to setup Publitio Wordpress Plugin](https://publit.io/community/blog/integrate-wordpress-site-with-publitio)
+The [Publitio](https://publit.io) WordPress plugin enables effortless integration with the [Publitio](https://publit.io) cloud media platform, 
+providing seamless access and embedding of your media files directly within WordPress editors through a dedicated [Publitio](https://publit.io) block.
+[Publitio](https://publit.io) aims to simplify the entire Media Asset Management (MAM) process by streamlining common tasks used by most web and 
+mobile publishers, such as uploading, hosting, processing, publishing, monetizing, and managing media files. 
+Its cloud-based platform offers secure storage, powerful on-the-fly media transformations, fast global delivery via CDN, 
+watermarking, and advanced analytics - helping content creators and businesses save time, reduce costs, 
+and focus on their core activities while ensuring efficient, scalable management of all digital assets.
 
-For more info check out [Publitio](https://publit.io) website
+Features:
 
-Or check detailed documentation for [Publitio Video & Image API](https://publit.io/docs)
+    - Easy Embedding: Add images, videos, audios, documents, and archives files directly in Gutenberg, Elementor and classic editors using the Publitio block for quick and intuitive embedding.
+    - Direct Uploads: Upload new media files to [Publitio](https://publit.io) cloud storage without leaving the WordPress editor.
+    - Media Library Browsing: Browse your entire [Publitio](https://publit.io) media library in a popup window, selecting files for instant insertion.
+    - Customizable Publitio Player: Embed videos and media with [Publitio](https://publit.io)’s fully customizable HTML5 player supporting VAST/IMA ad tags for monetization and multi-format playback.
+    - Optimized Delivery: Responsive images with srcset and multi-format video support for faster, adaptive loading.
+    - Secure Media: Utilize [Publitio](https://publit.io)’s domain-level protection and HLS encryption features to safeguard your content.
+    - Workflow Enhancement: Streamline content creation with easy access to cloud-hosted media assets, improving site speed and reducing server load.
 
-This plugin is open source, you can contribute to the development at [Publitio Wordpress Plugin Source on Github](https://github.com/ob1y2k/publitio_wp_plugin)
+
+Learn More & Support:
+
+    - Setup Guide: [How to setup Publitio Wordpress Plugin](https://publit.io/community/blog/integrate-wordpress-site-with-publitio)
+    - Video Guide: [How to setup Publitio Wordpress plugin](https://publit.io/community/blog/how-to-setup-publitio-wordpress-plugin)
+    - API & Documentation: [Publitio Video & Image API](https://publit.io/docs)
+    - Contact Support: support@publit.io, contact us through a support webwidget on our site or write on our [Community Board](https://dashboard.publit.io/app/dashboards/community)
+    - Plugin Source: [Publitio Wordpress Plugin Source on Github](https://github.com/ob1y2k/publitio_wp_plugin)
+
 
 == Installation ==
 
-1. Upload plugin to the `/wp-content/plugins/` directory
-2. Activate the plugin through the 'Plugins' menu in WordPress
-3. On the left menu find Publitio and enter API & Secret keys in settings
-4. On each new/edit post/page you will see Publitio button next to media library - use it to upload/insert images & videos via Publitio
+1. Go to Plugins > Add New in WordPress and search for “Publitio”.
+2. Click Install Now and then Activate the plugin.
+3. Create a free Publitio account and get your API Key and Secret from your Publitio dashboard.
+4. In WordPress, go to Settings > Publitio, enter your API credentials, save, and start embedding media with the Publitio block.
 
 == Frequently Asked Questions ==
 
-= Is this Plugin free? =
+= Is the Publitio WordPress plugin free? =
 
-Yes. You will need Publitio account (also free) to obtain API keys
+Yes, the plugin is free to use. You will need to create a free Publitio account to obtain API keys for integration.
 
 = What is Publitio? =
 
-Publitio is Platform-as-a-Service providing simple APIs for image & video management in the cloud
+Publitio is a cloud-based Media Asset Management (MAM) platform providing secure storage, media processing, delivery, monetization, and management via powerful APIs.
+
+= How do I set up the Publitio plugin? =
+
+Install and activate the plugin, then enter your Publitio API key and Secret key in the plugin settings. You can then upload and embed media directly from the WordPress editor using the Publitio block or button.
+
+= Can I upload and offload all types of media files? =
+
+Yes, the plugin supports images, videos, audios, documents, archives, and more, all managed securely in Publitio’s cloud.
+
+= Does Publitio support video monetization? =
+
+Yes, the customizable Publitio video player supports VAST/IMA ad tags for video monetization.
+
+= Can I transform media on the fly? =
+
+Yes, Publitio supports URL-based transformations including resizing, cropping, watermarking, transcoding, and quality adjustments.
+
+= How does the plugin improve website performance? =
+
+By serving all media files via Publitio’s global CDN and optimizing delivery, the plugin reduces server load and speeds up page load times.
+
+= Is media protected when using Publitio? =
+
+Yes, you can enable domain-level protection and HLS video encryption to secure your files from unauthorized access.
+
+= What if I have issues or need support? =
+
+Support is available by contacting support@publit.io, using on site support webwidget or Publitio community board.
 
 == Screenshots ==
 
 1. Publitio Settings page
-2. Publitio Media Library page
-3. Publitio Upload File page
-4. Publitio Media Player in post
+2. Publitio block in gutenberg editor
+3. Publitio Media Library page
+4. Publitio Upload File page
+5. Publitio Media Player in post
+6. Embedded content in a post
+7. Publitio Elementor widget
+8. Publitio Elementor Media Library page
 
 == Changelog ==
 
@@ -124,6 +176,12 @@ Publitio is Platform-as-a-Service providing simple APIs for image & video manage
 = 2.2.3 =
 * Minor fixes
 
+= 2.2.4 =
+* Quality of life fixes
+
+= 2.2.5 =
+* Added Elementor widget
+
 == Upgrade Notice ==
 
 = 1.0 =
@@ -201,3 +259,9 @@ Publitio Plugin (Version 2.0.0) is compatible with WP 5.0+ however you will need
 
 = 2.2.3 =
 * Minor fixes
+
+= 2.2.4 =
+* Quality of life fixes
+
+= 2.2.5 =
+* Added Elementor widget

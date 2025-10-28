@@ -184,6 +184,11 @@ class Publitio {
 		$this->loader->add_action( 'media_buttons', $plugin_admin, 'publitio_media_button', 16);
 		// $this->loader->add_filter( 'the_content', $plugin_admin, 'publitio_the_content' );
 
+		$this->loader->add_filter("plugin_action_links_" . PUBLITIO_PLUGIN_NAME, $plugin_admin, 'publitio_settings_link');
+
+		// Initialize Elementor integration
+		$this->loader->add_action( 'plugins_loaded', $plugin_admin, 'init_elementor' );
+
 		add_shortcode('publitio', [$plugin_admin, 'publitio_shortcode']);
 	}
 
