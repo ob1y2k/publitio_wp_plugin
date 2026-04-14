@@ -103,12 +103,12 @@
         <label for="api-key">API key<br />
           <small>API key and API secret pairs are used to authenticate your requests to the Publitio API.</small>
         </label>
-        <input id="api-key" name="api-key" type="password" value="<?php echo get_option(PUBLITIO_KEY_FIELD, ''); ?>" autocomplete="off" placeholder="API key" />
+        <input id="api-key" name="api-key" type="password" value="<?php echo esc_attr( get_option(PUBLITIO_KEY_FIELD, '') ); ?>" autocomplete="off" placeholder="API key" />
       </div>
 
       <div class="publitio-field-wrapper">
         <label for="api-secret">API secret</label>
-        <input id="api-secret" name="api-secret" type="password" value="<?php echo get_option(PUBLITIO_SECRET_FIELD, ''); ?>" autocomplete="off" placeholder="API secret" />
+        <input id="api-secret" name="api-secret" type="password" value="<?php echo esc_attr( get_option(PUBLITIO_SECRET_FIELD, '') ); ?>" autocomplete="off" placeholder="API secret" />
       </div>
 
       <div id="publitio-default-player-wrapper" class="publitio-field-wrapper">

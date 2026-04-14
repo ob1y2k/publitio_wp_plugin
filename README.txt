@@ -3,7 +3,7 @@ Contributors: publitio
 Donate link: https://publit.io
 Tags: publitio, images, videos, embed, upload
 Requires at least: 3.0.1
-Tested up to: 6.8
+Tested up to: 6.9
 Stable tag: 5.0.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -24,22 +24,22 @@ and focus on their core activities while ensuring efficient, scalable management
 
 Features:
 
-    - Easy Embedding: Add images, videos, audios, documents, and archives files directly in Gutenberg, Elementor and classic editors using the Publitio block for quick and intuitive embedding.
-    - Direct Uploads: Upload new media files to [Publitio](https://publit.io) cloud storage without leaving the WordPress editor.
-    - Media Library Browsing: Browse your entire [Publitio](https://publit.io) media library in a popup window, selecting files for instant insertion.
-    - Customizable Publitio Player: Embed videos and media with [Publitio](https://publit.io)’s fully customizable HTML5 player supporting VAST/IMA ad tags for monetization and multi-format playback.
-    - Optimized Delivery: Responsive images with srcset and multi-format video support for faster, adaptive loading.
-    - Secure Media: Utilize [Publitio](https://publit.io)’s domain-level protection and HLS encryption features to safeguard your content.
-    - Workflow Enhancement: Streamline content creation with easy access to cloud-hosted media assets, improving site speed and reducing server load.
+* Easy Embedding: Add images, videos, audios, documents, and archives files directly in Gutenberg, Elementor and classic editors using the Publitio block for quick and intuitive embedding.
+* Direct Uploads: Upload new media files to [Publitio](https://publit.io) cloud storage without leaving the WordPress editor.
+* Media Library Browsing: Browse your entire [Publitio](https://publit.io) media library in a popup window, selecting files for instant insertion.
+* Customizable Publitio Player: Embed videos and media with [Publitio](https://publit.io)’s fully customizable HTML5 player supporting VAST/IMA ad tags for monetization and multi-format playback.
+* Optimized Delivery: Responsive images with srcset and multi-format video support for faster, adaptive loading.
+* Secure Media: Utilize [Publitio](https://publit.io)’s domain-level protection and HLS encryption features to safeguard your content.
+* Workflow Enhancement: Streamline content creation with easy access to cloud-hosted media assets, improving site speed and reducing server load.
 
 
 Learn More & Support:
 
-    - Setup Guide: [How to setup Publitio Wordpress Plugin](https://publit.io/community/blog/integrate-wordpress-site-with-publitio)
-    - Video Guide: [How to setup Publitio Wordpress plugin](https://publit.io/community/blog/how-to-setup-publitio-wordpress-plugin)
-    - API & Documentation: [Publitio Video & Image API](https://publit.io/docs)
-    - Contact Support: support@publit.io, contact us through a support webwidget on our site or write on our [Community Board](https://dashboard.publit.io/app/dashboards/community)
-    - Plugin Source: [Publitio Wordpress Plugin Source on Github](https://github.com/ob1y2k/publitio_wp_plugin)
+* Setup Guide: [How to setup Publitio Wordpress Plugin](https://publit.io/community/blog/integrate-wordpress-site-with-publitio)
+* Video Guide: [How to setup Publitio Wordpress plugin](https://publit.io/community/blog/how-to-setup-publitio-wordpress-plugin)
+* API & Documentation: [Publitio Video & Image API](https://publit.io/docs)
+* Contact Support: support@publit.io, contact us through a support webwidget on our site or write on our [Community Board](https://dashboard.publit.io/app/dashboards/community)
+* Plugin Source: [Publitio Wordpress Plugin Source on Github](https://github.com/ob1y2k/publitio_wp_plugin)
 
 
 == Installation ==
@@ -182,6 +182,12 @@ Support is available by contacting support@publit.io, using on site support webw
 = 2.2.5 =
 * Added Elementor widget
 
+= 2.2.6 =
+* Bugfixes
+* Security fixes
+* Optimization
+* WP 6.9 check OK
+
 == Upgrade Notice ==
 
 = 1.0 =
@@ -265,3 +271,9 @@ Publitio Plugin (Version 2.0.0) is compatible with WP 5.0+ however you will need
 
 = 2.2.5 =
 * Added Elementor widget
+
+= 2.2.6 =
+* Bugfixes
+* Security fixes
+* Optimization
+* WP 6.9 check OK

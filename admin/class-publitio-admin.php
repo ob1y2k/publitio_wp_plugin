@@ -138,16 +138,20 @@ class Publitio_Admin {
         return $links;
     }
 
-	public function update_settings() {
-		// Check the nonce
-		if (!isset( $_POST['wpnonce']) || !wp_verify_nonce($_POST['wpnonce'], 'publitio_settings_nonce_action')) {
-			wp_die(__('Unauthorized request.', 'publitio'));
+	/**
+	 * Verify nonce and capability for settings-related AJAX.
+	 */
+	private function verify_settings_ajax_request() {
+		if ( ! isset( $_POST['wpnonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['wpnonce'] ) ), 'publitio_settings_nonce_action' ) ) {
+			wp_die( esc_html__( 'Unauthorized request.', 'publitio' ), esc_html__( 'Error', 'publitio' ), array( 'response' => 403 ) );
 		}
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_die( esc_html__( 'You do not have permission to perform this action.', 'publitio' ), esc_html__( 'Error', 'publitio' ), array( 'response' => 403 ) );
+		}
+	}
 
-		// Check user permissions
-		if (!current_user_can('manage_options')) {
-			wp_die(__('You do not have permission to update settings.', 'publitio'));
-		}
+	public function update_settings() {
+		$this->verify_settings_ajax_request();
 
 		// Sanitize and update settings
 		$api_key = sanitize_text_field($_POST['api_key']);
@@ -164,6 +168,7 @@ class Publitio_Admin {
 	}
 
 	public function try_to_get_players() {
+		$this->verify_settings_ajax_request();
 		$this->publitio->on_load();
 	}
 
@@ -546,20 +551,54 @@ class Publitio_Admin {
 	public function enqueue_elementor_editor_assets() {
 		// Register assets (needed in editor context where wp_enqueue_scripts doesn't run)
 		$this->register_elementor_assets();
-		
+
 		// Enqueue scripts and styles
 		wp_enqueue_script('publitio-elementor-widget');
 		wp_enqueue_style('publitio-elementor-style');
-		
-		// Pass settings to JavaScript
+
+		// Pass only non-sensitive settings to JavaScript — credentials are handled server-side
 		wp_localize_script('publitio-elementor-widget', 'publitioSettings', array(
-			'apiKey' => get_option(PUBLITIO_KEY_FIELD),
-			'apiSecret' => get_option(PUBLITIO_SECRET_FIELD),
-			'defaultPlayer' => get_option(PUBLITIO_DEFAULT_PLAYER)
+			'defaultPlayer' => get_option(PUBLITIO_DEFAULT_PLAYER),
 		));
-		
+
 		// Load ThickBox for modal
 		add_thickbox();
+	}
+
+	/**
+	 * Server-side redirect to Publitio dashboard.
+	 * Credentials are appended here on the server and never exposed in client HTML.
+	 *
+	 * @since    2.2.6
+	 */
+	public function dashboard_redirect() {
+		if ( ! isset( $_GET['nonce'] ) || ! wp_verify_nonce( $_GET['nonce'], 'publitio_dashboard_nonce' ) ) {
+			wp_die( __( 'Invalid request.', 'publitio' ) );
+		}
+
+		if ( ! current_user_can( 'edit_posts' ) ) {
+			wp_die( __( 'You do not have permission to access this.', 'publitio' ) );
+		}
+
+		$params = array(
+			'api_key'        => get_option( PUBLITIO_KEY_FIELD ),
+			'api_secret'     => get_option( PUBLITIO_SECRET_FIELD ),
+			'default_player' => get_option( PUBLITIO_DEFAULT_PLAYER, '' ),
+		);
+
+		if ( ! empty( $_GET['elementor'] ) ) {
+			$params['elementor'] = 'true';
+		}
+
+		if ( ! empty( $_GET['gutenberg'] ) ) {
+			$params['gutenberg'] = 'true';
+		}
+
+		// Remove empty values so the URL stays clean
+		$params = array_filter( $params, function( $v ) { return $v !== '' && $v !== false; } );
+
+		wp_redirect( 'https://publit.io/dashboard-wordpress?' . http_build_query( $params ) );
+		exit;
 	}
 
 	/**
