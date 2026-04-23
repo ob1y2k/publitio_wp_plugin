@@ -1,11 +1,12 @@
-<a title="Publitio" href="https://publit.io/dashboard-wordpress?api_key=<?php
-    echo get_option(PUBLITIO_KEY_FIELD)
-  ?>&api_secret=<?php
-    echo get_option(PUBLITIO_SECRET_FIELD)
-  ?>&default_player=<?php
-    echo get_option(PUBLITIO_DEFAULT_PLAYER)
-  ?>&TB_iframe=true&width=600&height=550" id="publitio-media-button" class="thickbox button">
+<?php
+$dashboard_url = add_query_arg( array(
+    'action' => 'publitio_dashboard_redirect',
+    'nonce'  => wp_create_nonce( 'publitio_dashboard_nonce' ),
+    'TB_iframe' => 'true',
+    'width'  => '600',
+    'height' => '550',
+), admin_url( 'admin-ajax.php' ) );
+?>
+<a title="Publitio" href="<?php echo esc_url( $dashboard_url ); ?>" id="publitio-media-button" class="thickbox button">
   <img src="<?php echo plugins_url( '/images/cloud-icon.png', dirname(__FILE__)  ); ?>"/> Publitio
 </a>
-
-

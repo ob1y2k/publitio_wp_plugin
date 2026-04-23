@@ -54,9 +54,18 @@ function publitio_block_editor_assets() { // phpcs:ignore
 		true // Enqueue the script in the footer.
 	);
 
+	$dashboard_url = add_query_arg( array(
+		'action'    => 'publitio_dashboard_redirect',
+		'nonce'     => wp_create_nonce( 'publitio_dashboard_nonce' ),
+		'gutenberg' => '1',
+		'TB_iframe' => 'true',
+		'width'     => '600',
+		'height'    => '550',
+	), admin_url( 'admin-ajax.php' ) );
+
 	wp_localize_script('publitio-block-js', 'publitioBlockVars', array(
 		'icon' => plugins_url( '../admin/images/cloud-icon.png', dirname(__FILE__)  ),
-	    'url' => 'https://publit.io/dashboard-wordpress?api_key='.get_option(PUBLITIO_KEY_FIELD).'&api_secret='.get_option(PUBLITIO_SECRET_FIELD).'&default_player='.get_option(PUBLITIO_DEFAULT_PLAYER).'&gutenberg=true&TB_iframe=true&width=600&height=550'
+		'url'  => $dashboard_url,
 	));
 
 

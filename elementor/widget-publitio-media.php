@@ -135,8 +135,15 @@ class Publitio_Media_Widget extends Widget_Base {
         } else {
             #>
             <div class="publitio-widget-button-wrapper" data-widget-id="{{ widgetId }}">
-                <a title="Select a file from Publitio" 
-                   href="https://publit.io/dashboard-wordpress?api_key=<?php echo esc_attr(get_option(PUBLITIO_KEY_FIELD)); ?>&api_secret=<?php echo esc_attr(get_option(PUBLITIO_SECRET_FIELD)); ?>&default_player=<?php echo esc_attr(get_option(PUBLITIO_DEFAULT_PLAYER)); ?>&elementor=true&TB_iframe=true&width=1200&height=800"
+                <a title="Select a file from Publitio"
+                   href="<?php echo esc_url( add_query_arg( array(
+                       'action'    => 'publitio_dashboard_redirect',
+                       'nonce'     => wp_create_nonce( 'publitio_dashboard_nonce' ),
+                       'elementor' => '1',
+                       'TB_iframe' => 'true',
+                       'width'     => '1200',
+                       'height'    => '800',
+                   ), admin_url( 'admin-ajax.php' ) ) ); ?>"
                    class="thickbox publitio-select-button">
                     <img src="<?php echo plugins_url('/publitio/admin/images/cloud-icon.png'); ?>" alt="Publitio">
                     Select a file from Publitio

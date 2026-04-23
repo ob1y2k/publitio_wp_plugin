@@ -10,7 +10,9 @@
   let settingsLoading = false
 
   $(function () {
-    tryToGetPlayers()
+    if ($('#_wpnonce').length) {
+      tryToGetPlayers()
+    }
     handleSettingsButtonClick()
     window.onmessage = (event) => {
       if (~event.origin.indexOf('https://publit.io') || ~event.origin.indexOf('https://dashboard.publit.io') || ~event.origin.indexOf('https://dev-dash.publit.io') || ~event.origin.indexOf('http://localhost') || ~event.origin.indexOf('https://dev-www.publit.io')) {
@@ -515,9 +517,16 @@
   }
 
   function tryToGetPlayers() {
-    jQuery.get(ajaxurl, { action: 'get_players_action' }, function(response) {
-      updateUIWithData(response)
-    })
+    jQuery.post(
+      ajaxurl,
+      {
+        action: 'get_players_action',
+        wpnonce: $('#_wpnonce').val(),
+      },
+      function (response) {
+        updateUIWithData(response)
+      }
+    )
   }
 
   function authError() {
