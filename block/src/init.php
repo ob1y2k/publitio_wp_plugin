@@ -27,8 +27,8 @@ function publitio_block_assets() { // phpcs:ignore
 	wp_enqueue_style(
 		'publitio-block-style-css', // Handle.
 		plugins_url( 'dist/blocks.style.build.css', dirname( __FILE__ ) ), // Block style CSS.
-		array( 'wp-editor' ) // Dependency to include the CSS after it.
-		// filemtime( plugin_dir_path( __DIR__ ) . 'dist/blocks.style.build.css' ) // Version: File modification time.
+		array( 'wp-editor' ), // Dependency to include the CSS after it.
+		filemtime( plugin_dir_path( __DIR__ ) . 'dist/blocks.style.build.css' ) // Version: File modification time.
 	);
 }
 
@@ -45,13 +45,28 @@ add_action( 'enqueue_block_assets', 'publitio_block_assets' );
  * @since 1.0.0
  */
 function publitio_block_editor_assets() { // phpcs:ignore
+
+	// ThickBox must live in the TOP editor document — the block's anchor sits
+	// inside the WP 6.3+ canvas iframe, where core delegation can't reach it.
+	add_thickbox();
+
 	// Scripts.
 	wp_enqueue_script(
 		'publitio-block-js', // Handle.
 		plugins_url( '/dist/blocks.build.js', dirname( __FILE__ ) ), // Block.build.js: We register the block here. Built with Webpack.
 		array( 'wp-blocks', 'wp-i18n', 'wp-element', 'wp-editor' ), // Dependencies, defined above.
-		// filemtime( plugin_dir_path( __DIR__ ) . 'dist/blocks.build.js' ), // Version: File modification time.
+		filemtime( plugin_dir_path( __DIR__ ) . 'dist/blocks.build.js' ), // Version: File modification time.
 		true // Enqueue the script in the footer.
+	);
+
+	// Bridges the iframed editor canvas: intercepts the block's thickbox link
+	// clicks inside the canvas and opens ThickBox in the top document.
+	wp_enqueue_script(
+		'publitio-block-editor-js',
+		plugins_url( '/dist/publitio-block-editor.js', dirname( __FILE__ ) ),
+		array( 'jquery', 'thickbox' ),
+		filemtime( plugin_dir_path( __DIR__ ) . 'dist/publitio-block-editor.js' ),
+		true
 	);
 
 	$dashboard_url = add_query_arg( array(
@@ -73,8 +88,8 @@ function publitio_block_editor_assets() { // phpcs:ignore
 	wp_enqueue_style(
 		'publitio-block-editor-css', // Handle.
 		plugins_url( 'dist/blocks.editor.build.css', dirname( __FILE__ ) ), // Block editor CSS.
-		array( 'wp-edit-blocks' ) // Dependency to include the CSS after it.
-		// filemtime( plugin_dir_path( __DIR__ ) . 'dist/blocks.editor.build.css' ) // Version: File modification time.
+		array( 'wp-edit-blocks' ), // Dependency to include the CSS after it.
+		filemtime( plugin_dir_path( __DIR__ ) . 'dist/blocks.editor.build.css' ) // Version: File modification time.
 	);
 }
 

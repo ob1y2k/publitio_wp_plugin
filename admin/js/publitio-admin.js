@@ -9,6 +9,80 @@
 
   let settingsLoading = false
 
+  // WP 6.3+ renders the block editor canvas inside an iframe — the block DOM is
+  // no longer reachable from this (top) document. Helpers below work in both worlds.
+  function publitioCanvasDoc() {
+    try {
+      const $iframe = $('iframe[name="editor-canvas"]')
+      if ($iframe.length) {
+        return $iframe.contents()
+      }
+    } catch (e) {}
+    return null
+  }
+
+  function publitioInsertGutenberg(pubCode) {
+    window.PublitioSourceHtml = pubCode
+
+    // Preferred: block editor data API — iframe-immune
+    try {
+      if (window.wp && window.wp.data && window.wp.data.select && window.wp.data.dispatch) {
+        const sel = window.wp.data.select('core/block-editor')
+        let clientId = sel && sel.getSelectedBlockClientId ? sel.getSelectedBlockClientId() : null
+        if (!clientId) {
+          const $cdoc = publitioCanvasDoc()
+          const $selectedBlock = $cdoc ? $cdoc.find('.wp-block.is-selected') : $('.wp-block.is-selected')
+          clientId = $selectedBlock.attr('data-block')
+        }
+        if (clientId) {
+          window.wp.data.dispatch('core/block-editor').updateBlockAttributes(clientId, { content: pubCode })
+        }
+      }
+    } catch (e) {}
+
+    // Legacy: poke the block's hidden input (non-iframed editors) — guarded, never throws
+    try {
+      let $input = $('.wp-block.is-selected .PublitioBlockContainer :input[type="text"]')
+      if (!$input.length) {
+        const $cdoc = publitioCanvasDoc()
+        if ($cdoc) {
+          $input = $cdoc.find('.wp-block.is-selected .PublitioBlockContainer :input[type="text"]')
+        }
+      }
+      if ($input.length) {
+        $input.val(pubCode)
+        $input[0].value = pubCode
+        $input[0].dispatchEvent(new Event('input', { bubbles: true, cancelable: true }))
+        $input[0].dispatchEvent(new Event('change', { bubbles: true, cancelable: true }))
+        $input.trigger('input').trigger('change')
+        $input.focus()
+      }
+    } catch (e) {}
+
+    // Clear the global variable after the block has had a chance to read it
+    setTimeout(() => {
+      window.PublitioSourceHtml = null
+    }, 100)
+  }
+
+  // Close ThickBox wherever it actually lives (top document or editor canvas iframe)
+  function publitioCloseThickbox() {
+    try {
+      if (typeof tb_remove === 'function') {
+        tb_remove()
+        return
+      }
+    } catch (e) {}
+    try {
+      $('#TB_window, #TB_overlay, #TB_HideSelect').remove()
+      const $cdoc = publitioCanvasDoc()
+      if ($cdoc) {
+        $cdoc.find('#TB_window, #TB_overlay, #TB_HideSelect').remove()
+      }
+      $('body').removeClass('modal-open')
+    } catch (e) {}
+  }
+
   $(function () {
     if ($('#_wpnonce').length) {
       tryToGetPlayers()
@@ -16,6 +90,9 @@
     handleSettingsButtonClick()
     window.onmessage = (event) => {
       if (~event.origin.indexOf('https://publit.io') || ~event.origin.indexOf('https://dashboard.publit.io') || ~event.origin.indexOf('https://dev-dash.publit.io') || ~event.origin.indexOf('http://localhost') || ~event.origin.indexOf('https://dev-www.publit.io')) {
+        if (typeof event.data !== 'string') {
+          return
+        }
         let data = event.data.split('|')
         
         //console.log("onmessage received " + data[0])  
@@ -36,46 +113,8 @@
             send_to_editor(`[publitio]link|${fileId}${playerId}[/publitio]`)
           }
         } else if (data[0] === 'link_gutenberg') {
-          
-            let pubCode = data[1];
-            window.PublitioSourceHtml = pubCode;
-            
-            const $selectedBlock = $('.wp-block.is-selected');
-            const $input = $('.wp-block.is-selected .PublitioBlockContainer :input[type="text"]');
-            
-            // Set the value and trigger all possible events
-            $input.val(pubCode);
-            $input[0].value = pubCode;
-            
-            // Create and dispatch native events
-            const inputEvent = new Event('input', { bubbles: true, cancelable: true });
-            const changeEvent = new Event('change', { bubbles: true, cancelable: true });
-            $input[0].dispatchEvent(inputEvent);
-            $input[0].dispatchEvent(changeEvent);
-            
-            // Also trigger jQuery events
-            $input.trigger('input').trigger('change');
-            
-            // Force Gutenberg block update
-            if (window.wp && window.wp.data && window.wp.data.dispatch) {
-                const { updateBlockAttributes } = window.wp.data.dispatch('core/block-editor');
-                const blockClientId = $selectedBlock.attr('data-block');
-                if (blockClientId) {
-                    updateBlockAttributes(blockClientId, { content: pubCode });
-                }
-            }
-            
-            $input.focus();
-            // Clear the global variable after use
-            setTimeout(() => {
-                window.PublitioSourceHtml = null;
-            }, 100);
-            // let fileId = data[1];
-            // //let playerId = data[2];
-            // let pubCode = `[publitio]link|${fileId}[/publitio]`;
-            // window.PublitioSourceHtml = pubCode; //data[1];
-            // $('.wp-block.is-selected .PublitioBlockContainer :input[type="text"]').attr('value', pubCode);  // data[1]        
-            // $('.wp-block.is-selected .PublitioBlockContainer :input[type="text"]').focus();
+
+            publitioInsertGutenberg(data[1]);
 
         } else if (data[0] === 'link_gutenberg_private') {
 
@@ -83,39 +122,8 @@
           let playerId = data[2];
           playerId = (typeof playerId !== 'undefined' && playerId && playerId !== 'undefined') ? '|' + playerId : '';
 
-          let pubCode = `[publitio]link|${fileId}${playerId}[/publitio]`;
-          window.PublitioSourceHtml = pubCode;
-          
-          const $selectedBlock = $('.wp-block.is-selected');
-          const $input = $('.wp-block.is-selected .PublitioBlockContainer :input[type="text"]');
-          
-          // Set the value and trigger all possible events
-          $input.val(pubCode);
-          $input[0].value = pubCode;
-          
-          // Create and dispatch native events
-          const inputEvent = new Event('input', { bubbles: true, cancelable: true });
-          const changeEvent = new Event('change', { bubbles: true, cancelable: true });
-          $input[0].dispatchEvent(inputEvent);
-          $input[0].dispatchEvent(changeEvent);
-          
-          // Also trigger jQuery events
-          $input.trigger('input').trigger('change');
-          
-          // Force Gutenberg block update
-          if (window.wp && window.wp.data && window.wp.data.dispatch) {
-              const { updateBlockAttributes } = window.wp.data.dispatch('core/block-editor');
-              const blockClientId = $selectedBlock.attr('data-block');
-              if (blockClientId) {
-                  updateBlockAttributes(blockClientId, { content: pubCode });
-              }
-          }
-          
-          $input.focus();
-          // Clear the global variable after use
-          setTimeout(() => {
-              window.PublitioSourceHtml = null;
-          }, 100);
+          publitioInsertGutenberg(`[publitio]link|${fileId}${playerId}[/publitio]`);
+
         } else if (data[0] === 'download') {
 
           let fileId = data[1];
@@ -127,83 +135,11 @@
 
         } else if (data[0] === 'download_gutenberg') {
 
-            //console.log("download_gutenberg");
-            let pubCode = data[1];
-            pubCode = `[publitio]download|${pubCode}[/publitio]`;
-            window.PublitioSourceHtml = pubCode;
-            
-            const $selectedBlock = $('.wp-block.is-selected');
-            const $input = $('.wp-block.is-selected .PublitioBlockContainer :input[type="text"]');
-            
-            // Set the value and trigger all possible events
-            $input.val(pubCode);
-            $input[0].value = pubCode;
-            
-            // Create and dispatch native events
-            const inputEvent = new Event('input', { bubbles: true, cancelable: true });
-            const changeEvent = new Event('change', { bubbles: true, cancelable: true });
-            $input[0].dispatchEvent(inputEvent);
-            $input[0].dispatchEvent(changeEvent);
-            
-            // Also trigger jQuery events
-            $input.trigger('input').trigger('change');
-            
-            // Force Gutenberg block update
-            if (window.wp && window.wp.data && window.wp.data.dispatch) {
-                const { updateBlockAttributes } = window.wp.data.dispatch('core/block-editor');
-                const blockClientId = $selectedBlock.attr('data-block');
-                if (blockClientId) {
-                    updateBlockAttributes(blockClientId, { content: pubCode });
-                }
-            }
-            
-            $input.focus();
-            // Clear the global variable after use
-            setTimeout(() => {
-                window.PublitioSourceHtml = null;
-            }, 100);
-            // let fileId = data[1];
-            // let pubCode = `[publitio]download|${fileId}[/publitio]`;
-            // window.PublitioSourceHtml = pubCode; //data[1];
-            // $('.wp-block.is-selected .PublitioBlockContainer :input[type="text"]').attr('value', pubCode);  // data[1]        
-            // $('.wp-block.is-selected .PublitioBlockContainer :input[type="text"]').focus();   
+            publitioInsertGutenberg(`[publitio]download|${data[1]}[/publitio]`);
+
         } else if (data[0] === 'download_gutenberg_private') {
 
-          //console.log("download_gutenberg");
-          let fileId = data[1];
-          let pubCode = `[publitio]download|${fileId}[/publitio]`;
-          window.PublitioSourceHtml = pubCode;
-          
-          const $selectedBlock = $('.wp-block.is-selected');
-          const $input = $('.wp-block.is-selected .PublitioBlockContainer :input[type="text"]');
-          
-          // Set the value and trigger all possible events
-          $input.val(pubCode);
-          $input[0].value = pubCode;
-          
-          // Create and dispatch native events
-          const inputEvent = new Event('input', { bubbles: true, cancelable: true });
-          const changeEvent = new Event('change', { bubbles: true, cancelable: true });
-          $input[0].dispatchEvent(inputEvent);
-          $input[0].dispatchEvent(changeEvent);
-          
-          // Also trigger jQuery events
-          $input.trigger('input').trigger('change');
-          
-          // Force Gutenberg block update
-          if (window.wp && window.wp.data && window.wp.data.dispatch) {
-              const { updateBlockAttributes } = window.wp.data.dispatch('core/block-editor');
-              const blockClientId = $selectedBlock.attr('data-block');
-              if (blockClientId) {
-                  updateBlockAttributes(blockClientId, { content: pubCode });
-              }
-          }
-          
-          $input.focus();
-          // Clear the global variable after use
-          setTimeout(() => {
-              window.PublitioSourceHtml = null;
-          }, 100);
+          publitioInsertGutenberg(`[publitio]download|${data[1]}[/publitio]`);
 
         } else if (data[0] === 'source') {
           if (tinymce.activeEditor !== null && typeof window.tinyMCE.execCommand !== 'undefined')  {
@@ -223,158 +159,28 @@
             send_to_editor(`[publitio]source|${fileId}${playerId}[/publitio]`)
           }
         } else if (data[0] === 'source_gutenberg') {
-          
-            //console.log("id je:" + $( ".wp-block.is-selected").prop('id'));
-            //console.log("val je:" +$( '.wp-block.is-selected .PublitioBlockContainer :input[type="text"]').val());
-            //console.log("date1 je:" +data[1]);
-            window.PublitioSourceHtml = data[1];
-            
-            const $selectedBlock = $('.wp-block.is-selected');
-            const $input = $('.wp-block.is-selected .PublitioBlockContainer :input[type="text"]');
 
-            // Set the value and trigger all possible events
-            $input.val(data[1]);
-            $input[0].value = data[1];
-            
-            // Create and dispatch native events
-            const inputEvent = new Event('input', { bubbles: true, cancelable: true });
-            const changeEvent = new Event('change', { bubbles: true, cancelable: true });
-            $input[0].dispatchEvent(inputEvent);
-            $input[0].dispatchEvent(changeEvent);
-            
-            // Also trigger jQuery events
-            $input.trigger('input').trigger('change');
-            
-            // Force Gutenberg block update
-            if (window.wp && window.wp.data && window.wp.data.dispatch) {
-                const { updateBlockAttributes } = window.wp.data.dispatch('core/block-editor');
-                const blockClientId = $selectedBlock.attr('data-block');
-                if (blockClientId) {
-                    updateBlockAttributes(blockClientId, { content: data[1] });
-                }
-            }
-            
-            $input.focus();
-            
-            // Clear the global variable after use
-            setTimeout(() => {
-                window.PublitioSourceHtml = null;
-            }, 100);
+            publitioInsertGutenberg(data[1]);
 
         } else if (data[0] === 'source_gutenberg_private') {
-            
+
           let fileId = data[1];
           let playerId = data[2];
           playerId = (typeof playerId !== 'undefined' && playerId && playerId !== 'undefined') ? '|' + playerId : '';
-          let pubCode = `[publitio]source|${fileId}${playerId}[/publitio]`;
-          
-          window.PublitioSourceHtml = pubCode;
-          
-          const $selectedBlock = $('.wp-block.is-selected');
-          const $input = $('.wp-block.is-selected .PublitioBlockContainer :input[type="text"]');
-          
-          // Set the value and trigger all possible events
-          $input.val(pubCode);
-          $input[0].value = pubCode;
-          
-          // Create and dispatch native events
-          const inputEvent = new Event('input', { bubbles: true, cancelable: true });
-          const changeEvent = new Event('change', { bubbles: true, cancelable: true });
-          $input[0].dispatchEvent(inputEvent);
-          $input[0].dispatchEvent(changeEvent);
-          
-          // Also trigger jQuery events
-          $input.trigger('input').trigger('change');
-          
-          // Force Gutenberg block update
-          if (window.wp && window.wp.data && window.wp.data.dispatch) {
-              const { updateBlockAttributes } = window.wp.data.dispatch('core/block-editor');
-              const blockClientId = $selectedBlock.attr('data-block');
-              if (blockClientId) {
-                  updateBlockAttributes(blockClientId, { content: pubCode });
-              }
-          }
-          
-          $input.focus();
-          // Clear the global variable after use
-          setTimeout(() => {
-              window.PublitioSourceHtml = null;
-          }, 100);
-          
-        } else if (data[0] === 'iframe_gutenberg') {
-            
-            window.PublitioSourceHtml = data[1];
-            
-            const $selectedBlock = $('.wp-block.is-selected');
-            const $input = $('.wp-block.is-selected .PublitioBlockContainer :input[type="text"]');
 
-            // Set the value and trigger all possible events
-            $input.val(data[1]);
-            $input[0].value = data[1];
-            
-            // Create and dispatch native events
-            const inputEvent = new Event('input', { bubbles: true, cancelable: true });
-            const changeEvent = new Event('change', { bubbles: true, cancelable: true });
-            $input[0].dispatchEvent(inputEvent);
-            $input[0].dispatchEvent(changeEvent);
-            
-            // Also trigger jQuery events
-            $input.trigger('input').trigger('change');
-            
-            // Force Gutenberg block update
-            if (window.wp && window.wp.data && window.wp.data.dispatch) {
-                const { updateBlockAttributes } = window.wp.data.dispatch('core/block-editor');
-                const blockClientId = $selectedBlock.attr('data-block');
-                if (blockClientId) {
-                    updateBlockAttributes(blockClientId, { content: data[1] });
-                }
-            }
-            
-            $input.focus();
-            // Clear the global variable after use
-            setTimeout(() => {
-                window.PublitioSourceHtml = null;
-            }, 100);
+          publitioInsertGutenberg(`[publitio]source|${fileId}${playerId}[/publitio]`);
+
+        } else if (data[0] === 'iframe_gutenberg') {
+
+            publitioInsertGutenberg(data[1]);
 
         } else if (data[0] === 'iframe_gutenberg_private') {
-            
+
             let fileId = data[1];
             let playerId = data[2];
             playerId = (typeof playerId !== 'undefined' && playerId && playerId !== 'undefined') ? '|' + playerId : '';
-            let pubCode = `[publitio]iframe|${fileId}${playerId}[/publitio]`;
-            
-            window.PublitioSourceHtml = pubCode;
-            
-            const $selectedBlock = $('.wp-block.is-selected');
-            const $input = $('.wp-block.is-selected .PublitioBlockContainer :input[type="text"]');
-            
-            // Set the value and trigger all possible events
-            $input.val(pubCode);
-            $input[0].value = pubCode;
-            
-            // Create and dispatch native events
-            const inputEvent = new Event('input', { bubbles: true, cancelable: true });
-            const changeEvent = new Event('change', { bubbles: true, cancelable: true });
-            $input[0].dispatchEvent(inputEvent);
-            $input[0].dispatchEvent(changeEvent);
-            
-            // Also trigger jQuery events
-            $input.trigger('input').trigger('change');
-            
-            // Force Gutenberg block update
-            if (window.wp && window.wp.data && window.wp.data.dispatch) {
-                const { updateBlockAttributes } = window.wp.data.dispatch('core/block-editor');
-                const blockClientId = $selectedBlock.attr('data-block');
-                if (blockClientId) {
-                    updateBlockAttributes(blockClientId, { content: pubCode });
-                }
-            }
-            
-            $input.focus();
-            // Clear the global variable after use
-            setTimeout(() => {
-                window.PublitioSourceHtml = null;
-            }, 100);
+
+            publitioInsertGutenberg(`[publitio]iframe|${fileId}${playerId}[/publitio]`);
 
         } else if (data[0] === 'iframe') {
           if (tinymce.activeEditor !== null && typeof window.tinyMCE.execCommand !== 'undefined')  {
@@ -403,11 +209,11 @@
           } else {
             send_to_editor(`[publitio]player|${fileId}|${playerId}[/publitio]`)
           }
-        }        
-        tb_remove();
+        }
+        publitioCloseThickbox();
       }
     }
-  }); 
+  });
 
   function handleWordPressData(wordpressData) {
     updateStorageChart(wordpressData)
