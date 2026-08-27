@@ -188,6 +188,9 @@ Support is available by contacting support@publit.io, using on site support webw
 * Optimization
 * WP 6.9 check OK
 
+= 2.2.7 =
+* Fixed "Select file from Publitio" in the block editor on recent WordPress (iframed editor canvas): modal opens properly again and closes on insert
+
 == Upgrade Notice ==
 
 = 1.0 =
@@ -277,3 +280,5 @@ Publitio Plugin (Version 2.0.0) is compatible with WP 5.0+ however you will need
 * Security fixes
 * Optimization
 * WP 6.9 check OK
+= 2.2.7 =
+* Fixes the block editor "Select file" modal on recent WordPress versions - update recommended
