@@ -84,7 +84,7 @@
   }
 
   $(function () {
-    if ($('#_wpnonce').length) {
+    if ($('#publitio_wpnonce').length) {
       tryToGetPlayers()
     }
     handleSettingsButtonClick()
@@ -327,7 +327,7 @@
       ajaxurl,
       {
         action: 'get_players_action',
-        wpnonce: $('#_wpnonce').val(),
+        wpnonce: $('#publitio_wpnonce').val(),
       },
       function (response) {
         updateUIWithData(response)
@@ -394,7 +394,7 @@
         api_secret: api_secret,
         api_key: api_key,
         default_player_id: default_player_id,
-        wpnonce: $('#_wpnonce').val()
+        wpnonce: $('#publitio_wpnonce').val()
       }, function (response) {
         if (response.status === STATUSES.ERROR_UNAUTHORIZED) {
           authError()

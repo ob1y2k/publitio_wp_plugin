@@ -97,7 +97,7 @@
 
     <div class="publitio-settings">
 
-      <?php wp_nonce_field('publitio_settings_nonce_action'); ?>
+      <?php wp_nonce_field('publitio_settings_nonce_action', 'publitio_wpnonce'); ?>
 
       <div class="publitio-field-wrapper">
         <label for="api-key">API key<br />
